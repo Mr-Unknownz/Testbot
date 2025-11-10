@@ -29,7 +29,7 @@ module.exports = {
     AUTO_READ_STATUS: process.env.AUTO_READ_STATUS === undefined ? "true" : process.env.AUTO_READ_STATUS,
 
     // 📰 New additions for Auto-News system
-    AUTO_NEWS: process.env.AUTO_NEWS || 'true', // true = auto send | false = manual only
+    AUTO_NEWS: process.env.AUTO_NEWS || 'false', // true = auto send | false = manual only
     NEWS_INTERVAL: process.env.NEWS_INTERVAL || 5 * 60 * 1000, // 5 minutes default
     NEWS_GROUP_ID: process.env.NEWS_GROUP_ID || '' // group jid for auto-send (optional)
 };
