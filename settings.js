@@ -20,7 +20,7 @@ module.exports = {
     AUTO_REPLY: process.env.AUTO_REPLY || 'true',
     AUTO_VOICE: process.env.AUTO_VOICE || 'false',
     AUTO_TYPING: process.env.AUTO_TYPING || 'false',
-    AUTO_BIO: process.env.AUTO_BIO || 'true',
+    AUTO_BIO: process.env.AUTO_BIO || 'false',
     AUTO_RECORDING: process.env.AUTO_RECORDING || 'false',
     ANTI_DELETE: process.env.ANTI_DELETE || 'true',
     ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox', 
