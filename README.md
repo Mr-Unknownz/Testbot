@@ -12,7 +12,7 @@ Powered by **Baileys MD** + Node.js ✨
 - 🎬 Movie & TV Search + Download  
 - 🤖 AI Chat + Sinhala / English support  
 - 📊 WhatsApp Status Tools  
-- 🔗 Multi-user Pair Code System  
+- 🔗 Multi-user Pair Code System.  
 
 ---
 ## ⚡ Installation
