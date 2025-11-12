@@ -191,23 +191,13 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
   });
   //============================== 
 
-//================== AUTO BIO & AUTO NEWS ==================
-try {
-    const { startAutoBio } = require("./plugins/auto-bio");
-    const { startAutoNews } = require("./plugins/news"); // <-- news.js එකේ function එක
+const { startAutoBio } = require("./plugins/auto-bio");
 
-    if (config.AUTO_BIO && config.AUTO_BIO.toLowerCase() === "true") {
-        startAutoBio(conn);
-        console.log("✅ AutoBio Started Successfully");
-    }
-
-    if (config.AUTO_NEWS && config.AUTO_NEWS.toLowerCase() === "true") {
-        startAutoNews(conn);
-        console.log("📰 AutoNews Started Successfully");
-    }
-} catch (err) {
-    console.error("❌ Error loading auto modules:", err);
-}
+conn.ev.on("connection.update", (update) => {
+  if (update.connection === "open" && config.AUTO_BIO.toLowerCase() === "true") {
+    startAutoBio(conn);
+  }
+});
 
          
 conn.ev.on('creds.update', saveCreds)  
