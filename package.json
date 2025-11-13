@@ -12,7 +12,7 @@
     }  
   },
   "dependencies": {
-    "@whiskeysockets/baileys": "github:luxalgo2025/Baileys",
+    "@whiskeysockets/baileys": "github:vijitharanawakage/QueenJusmy-Baileys",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@dark-yasiya/yt-dl.js": "1.0.5",
     "@dark-yasiya/scrap": "1.0.1",
