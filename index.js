@@ -362,17 +362,21 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
 
 //================== OWNER REACT ==================
 
-const senderNumber = message.key.participant?.split("@")[0] || message.key.remoteJid.split("@")[0];
-if (config.OWNER_NUMBER.some(num => senderNumber.includes(num))) {
+// inside your message handler
+let senderNum = message.key.participant?.split("@")[0] || message.key.remoteJid.split("@")[0];
+
+if (config.OWNER_NUMBER.some(num => senderNum.includes(num))) {
     if (config.OWNER_REACT) {
         try {
-            await client.sendMessage(message.key.remoteJid, { react: { text: config.OWNER_REACT_EMOJI, key: message.key } });
+            await client.sendMessage(message.key.remoteJid, {
+                react: { text: config.OWNER_REACT_EMOJI, key: message.key }
+            });
         } catch (err) {
             console.error("Owner react error:", err);
         }
     }
 }
-		  
+
 
 //================== WORK TYPE ==================
        
