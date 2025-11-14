@@ -1,73 +1,65 @@
 const { cmd } = require("../lib/command");
-const { downloadMediaMessage } = require("@whiskeysockets/baileys");
+const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 
 cmd({
   pattern: "vv",
   alias: ["viewonce", "❤️"],
   react: "🐳",
-  desc: "Owner Only - retrieve quoted view-once / media messages",
+  desc: "Owner Only - retrieve quoted media back to user",
   category: "owner",
   filename: __filename
 }, async (client, message, match, { from }) => {
   try {
+    // Check if message is replied
     if (!match.quoted) {
       return await client.sendMessage(from, {
         text: "*🍁 Please reply to a view-once or media message!*"
       }, { quoted: message });
     }
 
-    let quotedMsg = match.quoted;
+    // Handle ephemeral/view-once messages
+    const quoted = match.quoted.ephemeralMessage?.message || match.quoted;
+    const mtype = quoted.mtype || Object.keys(quoted)[0];
 
-    // 🔹 Safe access to message content
-    let msgContent = quotedMsg?.message?.ephemeralMessage?.message || quotedMsg?.message;
-    if (!msgContent) {
+    if (!["imageMessage", "videoMessage", "audioMessage"].includes(mtype)) {
       return await client.sendMessage(from, {
-        text: "*❌ Could not fetch message content!*"
+        text: "❌ Only image, video, and audio messages are supported"
       }, { quoted: message });
     }
 
-    // 🔹 Detect the inner message type dynamically
-    const mtype = Object.keys(msgContent)[0];
+    // Download media
+    const stream = await downloadContentFromMessage(quoted[mtype], mtype.replace("Message", ""));
+    let buffer = Buffer.from([]);
+    for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
 
-    // 🔹 Download media safely
-    const buffer = await downloadMediaMessage({ message: msgContent });
-
-    const options = { quoted: message };
+    // Prepare message content
     let messageContent = {};
-
     switch (mtype) {
       case "imageMessage":
         messageContent = {
           image: buffer,
-          caption: msgContent.imageMessage.caption || '',
-          mimetype: msgContent.imageMessage.mimetype || "image/jpeg"
+          caption: quoted[mtype]?.caption || "",
+          mimetype: quoted[mtype]?.mimetype || "image/jpeg"
         };
         break;
-
       case "videoMessage":
         messageContent = {
           video: buffer,
-          caption: msgContent.videoMessage.caption || '',
-          mimetype: msgContent.videoMessage.mimetype || "video/mp4"
+          caption: quoted[mtype]?.caption || "",
+          mimetype: quoted[mtype]?.mimetype || "video/mp4"
         };
         break;
-
       case "audioMessage":
         messageContent = {
           audio: buffer,
-          mimetype: msgContent.audioMessage?.mimetype || "audio/mp4",
-          ptt: msgContent.audioMessage?.ptt || false
+          mimetype: quoted[mtype]?.mimetype || "audio/mp4",
+          ptt: quoted[mtype]?.ptt || false
         };
         break;
-
-      default:
-        return await client.sendMessage(from, {
-          text: "❌ Only image, video, and audio messages are supported"
-        }, options);
     }
 
-    // 🔹 Send the media back
-    await client.sendMessage(from, messageContent, options);
+    // Send media back
+    await client.sendMessage(from, messageContent, { quoted: message });
 
   } catch (error) {
     console.error("vv Error:", error);
