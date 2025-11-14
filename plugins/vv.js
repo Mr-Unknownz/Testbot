@@ -2,9 +2,6 @@ const { cmd } = require("../lib/command");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
 const config = require("../settings");
 
-// Config from environment variable
-// 'same-chat' => send back to same chat
-// 'inbox' => send to bot's inbox
 const ANTI_VV = config.ANTI_VV || 'inbox';
 
 cmd({
@@ -36,60 +33,48 @@ cmd({
     let buffer = Buffer.from([]);
     for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
 
-    // Prepare message content
+    // Prepare media message
     let messageContent = {};
     switch (mtype) {
       case "imageMessage":
-        messageContent = {
-          image: buffer,
-          caption: quoted[mtype]?.caption || "",
-          mimetype: quoted[mtype]?.mimetype || "image/jpeg"
-        };
+        messageContent = { image: buffer, mimetype: quoted[mtype]?.mimetype || "image/jpeg" };
         break;
       case "videoMessage":
-        messageContent = {
-          video: buffer,
-          caption: quoted[mtype]?.caption || "",
-          mimetype: quoted[mtype]?.mimetype || "video/mp4"
-        };
+        messageContent = { video: buffer, mimetype: quoted[mtype]?.mimetype || "video/mp4" };
         break;
       case "audioMessage":
-        messageContent = {
-          audio: buffer,
-          mimetype: quoted[mtype]?.mimetype || "audio/mp4",
-          ptt: quoted[mtype]?.ptt || false
-        };
+        messageContent = { audio: buffer, mimetype: quoted[mtype]?.mimetype || "audio/mp4", ptt: quoted[mtype]?.ptt || false };
         break;
+    }
+
+    // Fancy caption
+    let captionText = quoted[mtype]?.caption ? `𝐂ᴀᴘᴛɪᴏɴ : *${quoted[mtype].caption}*\n\n` : "";
+
+    if (message.key.remoteJid.endsWith("@g.us")) {
+      const groupJid = message.key.remoteJid;
+      const groupMetadata = await client.groupMetadata(groupJid).catch(() => null);
+      const groupName = groupMetadata?.subject || groupJid.split("@")[0];
+      const senderNumber = message.key.participant?.split("@")[0] || "Unknown";
+      const groupLink = groupMetadata?.id ? `https://chat.whatsapp.com/${groupMetadata.id}` : "N/A";
+
+      captionText += `📌 *𝐅ʀᴏᴍ :* @${senderNumber}\n📂 _𝐆ʀᴏᴜᴘ:_ ${groupName}\n🔗 _𝐋ɪɴᴋ:_ ${groupLink}`;
+    } else {
+      const senderNumber = message.key.remoteJid.split("@")[0];
+      captionText += `📌 *𝐅ʀᴏᴍ:* @${senderNumber}`;
+    }
+
+    if (["imageMessage", "videoMessage"].includes(mtype)) {
+      messageContent.caption = captionText;
     }
 
     // Determine destination
-    let destination;
-    if (ANTI_VV === 'same-chat') {
-      destination = from; // original chat
-    } else {
-      destination = client.user.id.split(":")[0] + "@s.whatsapp.net"; // bot inbox
-    }
-
-    // Include sender info for groups
-    let extraText = "";
-    if (message.key.remoteJid.endsWith("@g.us")) {
-      const sender = message.key.participant || message.key.remoteJid.split("@")[0];
-      extraText = `\n\n📌 From: ${sender}\n📂 Group: ${message.key.remoteJid.split("@")[0]}`;
-    }
-
-    if (extraText && messageContent.caption) {
-      messageContent.caption += extraText;
-    } else if (extraText) {
-      messageContent.caption = extraText;
-    }
+    const destination = ANTI_VV === 'same-chat' ? from : client.user.id.split(":")[0] + "@s.whatsapp.net";
 
     // Send message
     await client.sendMessage(destination, messageContent, { quoted: message });
 
   } catch (error) {
     console.error("vv Error:", error);
-    await client.sendMessage(from, {
-      text: "❌ Error fetching vv message:\n" + error.message
-    }, { quoted: message });
+    await client.sendMessage(from, { text: "❌ Error fetching vv message:\n" + error.message }, { quoted: message });
   }
 });
