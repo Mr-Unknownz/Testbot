@@ -21,6 +21,7 @@ AUTO_TYPING: process.env.AUTO_TYPING || 'false',
 AUTO_BIO: process.env.AUTO_BIO || 'false',
 AUTO_RECORDING: process.env.AUTO_RECORDING || 'false',
 ANTI_DELETE: process.env.ANTI_DELETE || 'true',
+ANTI_VV: process.env.ANTI_VV || 'inbox',
 ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',
  // 📰 New additions for Auto-News system
 AUTO_NEWS: process.env.AUTO_NEWS || 'true', // true = auto send | false = manual only
