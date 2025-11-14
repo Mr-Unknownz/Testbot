@@ -4,10 +4,22 @@ const cheerio = require("cheerio");
 const { cmd } = require("../lib/command");
 const config = require("../settings");
 
+// 👉 Default browser headers to bypass HiruNews bot protection
+const browserHeaders = {
+    "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept":
+        "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+};
+
 async function getLatestFullNews() {
     try {
-        // 📰 Get latest article link from home page
-        const { data } = await axios.get("https://www.hirunews.lk/");
+        // 📰 Fetch home page with browser headers
+        const { data } = await axios.get("https://www.hirunews.lk/", {
+            headers: browserHeaders
+        });
+
         const $ = cheerio.load(data);
         const firstLink = $(".hnticker_marquee a").first();
         const title = firstLink.text().trim();
@@ -15,11 +27,18 @@ async function getLatestFullNews() {
 
         if (!link) return "⚠️ Couldn’t find the latest news link.";
 
-        // 🧾 Fetch full news content from that article page
-        const { data: article } = await axios.get(link);
-        const $$ = cheerio.load(article);
+        // 🧾 Fetch article page
+        const fullUrl = link.startsWith("http")
+            ? link
+            : "https://www.hirunews.lk" + link;
 
+        const { data: article } = await axios.get(fullUrl, {
+            headers: browserHeaders
+        });
+
+        const $$ = cheerio.load(article);
         let body = "";
+
         $$(".news-content p").each((i, el) => {
             const t = $$(el).text().trim();
             if (t.length > 0) body += t + "\n\n";
@@ -27,10 +46,10 @@ async function getLatestFullNews() {
 
         if (!body) body = "⚠️ Couldn’t load full article content.";
 
-        return `🗞️ *${title}*\n\n${body}\n🔗 ${link.startsWith("http") ? link : "https://www.hirunews.lk" + link}`;
+        return `🗞️ *${title}*\n\n${body}\n🔗 ${fullUrl}`;
     } catch (err) {
-        console.error("❌ Error fetching Hiru news:", err);
-        return "❌ Error fetching latest news from HiruNews.lk";
+        console.error("❌ Error fetching Hiru news:", err.message);
+        return "❌ Error fetching latest news from HiruNews.lk (Blocked / Network Error)";
     }
 }
 
@@ -38,7 +57,7 @@ async function getLatestFullNews() {
 // Command definition
 // ────────────────────────────────
 function startAutoNews(conn) {
-    // Command for manual fetch
+    // Manual command
     cmd({
         pattern: "news",
         desc: "Get the latest full news from HiruNews.lk",
@@ -51,9 +70,10 @@ function startAutoNews(conn) {
         await conn.sendMessage(m.chat, { text: msg }, { quoted: mek });
     });
 
-    // Auto-send system every 5 minutes if group ID is set
+    // Auto news system
     if (config.NEWS_GROUP_ID) {
-        const interval = config.NEWS_INTERVAL || 5 * 60 * 1000; // default 5 minutes
+        const interval = config.NEWS_INTERVAL || 5 * 60 * 1000; // 5 minutes
+
         setInterval(async () => {
             try {
                 const msg = await getLatestFullNews();
