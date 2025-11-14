@@ -1,4 +1,4 @@
-const { cmd } = require("../lib/command");
+const { cmd } = require("../command");
 
 cmd({
   pattern: "vv",
@@ -7,14 +7,8 @@ cmd({
   desc: "Owner Only - retrieve quoted message back to user",
   category: "owner",
   filename: __filename
-}, async (client, message, match, { from, isCreator }) => {
+}, async (client, message, match, { from }) => {
   try {
-    if (!isCreator) {
-      return await client.sendMessage(from, {
-        text: "*📛 This is an owner command.*"
-      }, { quoted: message });
-    }
-
     if (!match.quoted) {
       return await client.sendMessage(from, {
         text: "*🍁 Please reply to a view once message!*"
