@@ -5,7 +5,7 @@ function convertToBool(text, fault = 'true') {
 }
 module.exports = {
 
-SESSION_ID: process.env.SESSION_ID || 'QJUSMY=3lYy1ZgY#biUjB9kbcdIpnn-99_qej0WRLPMA_jebAq7e4MRWpPg',
+SESSION_ID: process.env.SESSION_ID || 'QJUSMY=2wgkVZ6L#IPv0SYP87atKboClntB1rqDo-CHAKl0DyzT83M3uFA0',
 MONGODB: process.env.MONGODB || "mongodb://mongo:hSKOyytRSHAikyAFUajcmkoJTEcgoBTR@trolley.proxy.rlwy.net:29757",  
 PREFIX: process.env.PREFIX || '.',
 ALIVE_IMG: process.env.ALIVE_IMG || 'https://files.catbox.moe/y4e5zy.jpg',   
@@ -20,7 +20,7 @@ AUTO_VOICE: process.env.AUTO_VOICE || 'false',
 AUTO_TYPING: process.env.AUTO_TYPING || 'false',
 AUTO_BIO: process.env.AUTO_BIO || 'false',
 AUTO_RECORDING: process.env.AUTO_RECORDING || 'false',
-ALWAYS_ONLINE: process.env.ALWAYS_ONLINE || 'false',
+ALWAYS_ONLINE: process.env.ALWAYS_ONLINE || 'true',
 ANTI_DELETE: process.env.ANTI_DELETE || 'true',
 ANTI_VV: process.env.ANTI_VV || 'inbox',// type same-chat for chat owner upload and type inbox for bot inbox upload
 ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',// same-chat for owner send and inbox for bot inbox send
