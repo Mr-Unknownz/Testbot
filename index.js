@@ -64,7 +64,7 @@ const ownerNumber = ['94723975388', '94741259325'];
 //================== SESSION ==================
 if (!fs.existsSync(__dirname + '/session/creds.json')) {
     if (!config.SESSION_ID) return console.log("Please Add SESSION_ID ➾")
-      const sessdata = config.SESSION_ID.split("QJUSMY=")[1];
+      const sessdata = config.SESSION_ID.split("KSMD~")[1];
       const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
       filer.download((err, data) => {
         if (err) throw err
@@ -191,13 +191,23 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
   });
   //============================== 
 
-const { startAutoBio } = require("./plugins/auto-bio");
+//================== AUTO BIO & AUTO NEWS ==================
+try {
+    const { startAutoBio } = require("./plugins/auto-bio");
+    const { startAutoNews } = require("./plugins/news"); // <-- news.js එකේ function එක
 
-conn.ev.on("connection.update", (update) => {
-  if (update.connection === "open" && config.AUTO_BIO.toLowerCase() === "true") {
-    startAutoBio(conn);
-  }
-});
+    if (config.AUTO_BIO && config.AUTO_BIO.toLowerCase() === "true") {
+        startAutoBio(conn);
+        console.log("✅ AutoBio Started Successfully");
+    }
+
+    if (config.AUTO_NEWS && config.AUTO_NEWS.toLowerCase() === "true") {
+        startAutoNews(conn);
+        console.log("📰 AutoNews Started Successfully");
+    }
+} catch (err) {
+    console.error("❌ Error loading auto modules:", err);
+}
 
          
 conn.ev.on('creds.update', saveCreds)  
