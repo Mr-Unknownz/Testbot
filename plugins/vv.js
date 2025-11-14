@@ -18,19 +18,19 @@ cmd({
 
     let quotedMsg = match.quoted;
 
-    // 🔹 Handle ephemeral / view-once wrapper
-    if (quotedMsg.message.ephemeralMessage) {
-      quotedMsg = {
-        ...quotedMsg,
-        message: quotedMsg.message.ephemeralMessage.message
-      };
+    // 🔹 Safe access to message content
+    let msgContent = quotedMsg?.message?.ephemeralMessage?.message || quotedMsg?.message;
+    if (!msgContent) {
+      return await client.sendMessage(from, {
+        text: "*❌ Could not fetch message content!*"
+      }, { quoted: message });
     }
 
     // 🔹 Detect the inner message type dynamically
-    const mtype = Object.keys(quotedMsg.message)[0];
+    const mtype = Object.keys(msgContent)[0];
 
     // 🔹 Download media safely
-    const buffer = await downloadMediaMessage(quotedMsg);
+    const buffer = await downloadMediaMessage({ message: msgContent });
 
     const options = { quoted: message };
     let messageContent = {};
@@ -39,24 +39,24 @@ cmd({
       case "imageMessage":
         messageContent = {
           image: buffer,
-          caption: quotedMsg.message.imageMessage.caption || '',
-          mimetype: quotedMsg.message.imageMessage.mimetype || "image/jpeg"
+          caption: msgContent.imageMessage.caption || '',
+          mimetype: msgContent.imageMessage.mimetype || "image/jpeg"
         };
         break;
 
       case "videoMessage":
         messageContent = {
           video: buffer,
-          caption: quotedMsg.message.videoMessage.caption || '',
-          mimetype: quotedMsg.message.videoMessage.mimetype || "video/mp4"
+          caption: msgContent.videoMessage.caption || '',
+          mimetype: msgContent.videoMessage.mimetype || "video/mp4"
         };
         break;
 
       case "audioMessage":
         messageContent = {
           audio: buffer,
-          mimetype: quotedMsg.message.audioMessage.mimetype || "audio/mp4",
-          ptt: quotedMsg.message.audioMessage.ptt || false
+          mimetype: msgContent.audioMessage?.mimetype || "audio/mp4",
+          ptt: msgContent.audioMessage?.ptt || false
         };
         break;
 
