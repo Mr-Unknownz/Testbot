@@ -1,5 +1,11 @@
 const { cmd } = require("../lib/command");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
+const config = require("../settings");
+
+// Config from environment variable
+// 'same-chat' => send back to same chat
+// 'inbox' => send to bot's inbox
+const ANTI_VV = config.ANTI_VV || 'inbox';
 
 cmd({
   pattern: "vv",
@@ -10,14 +16,12 @@ cmd({
   filename: __filename
 }, async (client, message, match, { from }) => {
   try {
-    // Check if message is replied
     if (!match.quoted) {
       return await client.sendMessage(from, {
         text: "*🍁 Please reply to a view-once or media message!*"
       }, { quoted: message });
     }
 
-    // Handle ephemeral/view-once messages
     const quoted = match.quoted.ephemeralMessage?.message || match.quoted;
     const mtype = quoted.mtype || Object.keys(quoted)[0];
 
@@ -58,8 +62,29 @@ cmd({
         break;
     }
 
-    // Send media back
-    await client.sendMessage(from, messageContent, { quoted: message });
+    // Determine destination
+    let destination;
+    if (ANTI_VV === 'same-chat') {
+      destination = from; // original chat
+    } else {
+      destination = client.user.id.split(":")[0] + "@s.whatsapp.net"; // bot inbox
+    }
+
+    // Include sender info for groups
+    let extraText = "";
+    if (message.key.remoteJid.endsWith("@g.us")) {
+      const sender = message.key.participant || message.key.remoteJid.split("@")[0];
+      extraText = `\n\n📌 From: ${sender}\n📂 Group: ${message.key.remoteJid.split("@")[0]}`;
+    }
+
+    if (extraText && messageContent.caption) {
+      messageContent.caption += extraText;
+    } else if (extraText) {
+      messageContent.caption = extraText;
+    }
+
+    // Send message
+    await client.sendMessage(destination, messageContent, { quoted: message });
 
   } catch (error) {
     console.error("vv Error:", error);
