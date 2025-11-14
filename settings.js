@@ -21,12 +21,8 @@ AUTO_TYPING: process.env.AUTO_TYPING || 'false',
 AUTO_BIO: process.env.AUTO_BIO || 'false',
 AUTO_RECORDING: process.env.AUTO_RECORDING || 'false',
 ANTI_DELETE: process.env.ANTI_DELETE || 'true',
-ANTI_VV: process.env.ANTI_VV || 'inbox',
-ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',
- // 📰 New additions for Auto-News system
-AUTO_NEWS: process.env.AUTO_NEWS || 'true', // true = auto send | false = manual only
-NEWS_INTERVAL: process.env.NEWS_INTERVAL || 5 * 60 * 1000, // 5 minutes default
-NEWS_GROUP_ID: process.env.NEWS_GROUP_ID || '', // group jid for auto-send (optional)
+ANTI_VV: process.env.ANTI_VV || 'inbox',// type same-chat for chat owner upload and type inbox for bot inbox upload
+ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',// same-chat for owner send and inbox for bot inbox send
 OWNER_NAME: process.env.OWNER_NAME || '_Mr Unknown X Luxalgo_',
 OWNER_NUMBER: process.env.OWNER_NUMBER || ['94723975388','94741259325'],
 AUTO_READ_STATUS: process.env.AUTO_READ_STATUS === undefined ?"true" : process.env.AUTO_READ_STATUS
