@@ -5,7 +5,7 @@ function convertToBool(text, fault = 'true') {
 }
 module.exports = {
 
-SESSION_ID: process.env.SESSION_ID || 'QJUSMY=K8RHUT5T#rMrudLZVYBGjuNx6PN95V-k9jB6fEJeDB90t-O0GJUY',
+SESSION_ID: process.env.SESSION_ID || 'QJUSMY=DpwVxKab#x0VQGlMu6RELYV6EXaJBVj-6FJhrAxEkuklhdbazrsE',
 MONGODB: process.env.MONGODB || "mongodb://mongo:hSKOyytRSHAikyAFUajcmkoJTEcgoBTR@trolley.proxy.rlwy.net:29757",  
 PREFIX: process.env.PREFIX || '.',
 ALIVE_IMG: process.env.ALIVE_IMG || 'https://files.catbox.moe/xu4725.jpg',   
@@ -18,7 +18,7 @@ MENTION_REPLY: process.env.MENTION_REPLY || 'true',
 AUTO_REPLY: process.env.AUTO_REPLY || 'true',
 AUTO_VOICE: process.env.AUTO_VOICE || 'false',
 AUTO_TYPING: process.env.AUTO_TYPING || 'false',
-AUTO_BIO: process.env.AUTO_BIO || 'true',
+AUTO_BIO: process.env.AUTO_BIO || 'false',
 AUTO_RECORDING: process.env.AUTO_RECORDING || 'false',
 ANTI_DELETE: process.env.ANTI_DELETE || 'true',
 ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox', 
