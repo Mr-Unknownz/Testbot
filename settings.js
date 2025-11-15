@@ -20,7 +20,7 @@ AUTO_VOICE: process.env.AUTO_VOICE || 'false',
 AUTO_TYPING: process.env.AUTO_TYPING || 'false',
 AUTO_BIO: process.env.AUTO_BIO || 'false',
 AUTO_RECORDING: process.env.AUTO_RECORDING || 'false',
-ALWAYS_ONLINE: process.env.ALWAYS_ONLINE || 'true',
+ALWAYS_ONLINE: process.env.ALWAYS_ONLINE || 'false',
 ANTI_DELETE: process.env.ANTI_DELETE || 'true',
 ANTI_VV: process.env.ANTI_VV || 'inbox',// type same-chat for chat owner upload and type inbox for bot inbox upload
 ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',// same-chat for owner send and inbox for bot inbox send
