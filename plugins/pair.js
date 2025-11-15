@@ -21,9 +21,9 @@ cmd({
             return await reply("❌ Please provide a valid phone number without `+`\nExample: `.pair 947412593XX`");
         }
 
-        await reply("⏳ *Ｇ𝙴𝙽𝙴𝚁𝙰𝚃𝙸𝙽𝙶 Ｙ𝙾𝚄𝚁 Ｐ𝙰𝙸𝚁𝙸𝙽𝙶 Ｃ𝙾𝙳𝙴...*\n\n𝐏ʟᴇᴀꜱ𝐄 𝐖ᴀɪ𝐓 𝐖ʜɪʟ𝐄 𝐖𝐄 𝐂ᴏɴɴᴇᴄ𝐓 𝐓𝐎 𝐓ʜ𝐄 𝐍ᴏᴠ𝐀-𝐗 𝐌𝐃 𝐒ᴇʀᴠᴇ𝐑.");
+        await reply("⏳ *Ｇ𝙴𝙽𝙴𝚁𝙰𝚃𝙸𝙽𝙶 Ｙ𝙾𝚄𝚁 Ｐ𝙰𝙸𝚁𝙸𝙽𝙶 Ｃ𝙾𝙳𝙴...*\n\n𝐏ʟᴇᴀꜱᴇ 𝐖ᴀɪᴛ 𝐖ʜɪʟᴇ 𝐖ᴇ 𝐂ᴏɴɴᴇᴄᴛ 𝐓ᴏ 𝐓ʜᴇ < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐒ᴇʀᴠᴇʀ.");
 
-        const res = await axios.get(`https://ks-md-pair.onrender.com/code?number=${encodeURIComponent(phoneNumber)}`);
+        const res = await axios.get(`https://queen-jusmy-pair.onrender.com/code?number=${encodeURIComponent(phoneNumber)}`);
 
         if (!res.data || !res.data.code) {
             return await reply("❌ Failed to retrieve pairing code. Please try again later.");
@@ -31,7 +31,7 @@ cmd({
 
         const pairingCode = res.data.code;
         const instructions = 
-            `✅ *Ｎᴏᴠᴀ-Ｘ ＭＤ ＰᴀɪʀɪɴＧ ＣᴏᴍᴘʟᴇᴛᴇＤ*\n\n` +
+            `✅ *Ｑᴜᴇᴇɴ Ｊᴜꜱᴍʏ Ｐᴀɪʀɪɴɢ Ｃᴏᴍᴘʟᴇᴛᴇᴅ*\n\n` +
             `*𝐘𝐨𝐮𝐫 𝐏𝐚𝐢𝐫𝐢𝐧𝐠 𝐂𝐨𝐝𝐞 𝐈𝐬:* \`\`\`${pairingCode}\`\`\`\n\n` +
             `📌 *𝐈𝐧𝐬𝐭𝐫𝐮𝐜𝐭𝐢𝐨𝐧𝐬 𝐅𝐨𝐫 𝐏𝐚𝐢𝐫:*\n` +
             `1. 𝙾𝙿𝙴𝙽 𝚆𝙷𝙰𝚃𝚂𝙰𝙿𝙿 𝙾𝙽 𝚈𝙾𝚄𝚁 𝙳𝙴𝚅𝙸𝙲𝙴.\n` +
@@ -41,22 +41,22 @@ cmd({
             `5. 𝚆𝙰𝙸𝚃 𝙵𝙾𝚁 𝚃𝙷𝙴 𝙱𝙾𝚃 𝚃𝙾 𝙲𝙾𝙽𝙽𝙴𝙲𝚃.\n\n` +
             `⚠️ *ＮＯＴＥ:* 𝚃𝙷𝙸𝚂 𝙲𝙾𝙳𝙴 𝚆𝙸𝙻𝙻 𝙴𝚇𝙿𝙸𝚁𝙴 𝙸𝙽 1 𝙼𝙸𝙽𝚄𝚃𝙴. 𝚄𝚂𝙴 𝙸𝚃 𝙸𝙼𝙼𝙴𝙳𝙸𝙰𝚃𝙻𝚈..!`;
 
-       if (process.env.BUTTON === 'true') {
+       if (config.BUTTON === 'true') {
     await conn.sendMessage(from, {
         text: instructions,
-        footer: "NOVA-X MD Pairing System",
+        footer: "❬❬ < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐏ᴀɪʀɪɴɢ 𝐒ʏꜱᴛᴇᴍ",
         templateButtons: [
             {
                 index: 1,
                 quickReplyButton: {
-                    displayText: `📋 COPY CODE`,
+                    displayText: `📋 𝙲𝙾𝙿𝚈 𝙲𝙾𝙳𝙴`,
                     id: pairingCode   // <-- OTP Direct Copy Text
                 }
             },
             {
                 index: 2,
                 quickReplyButton: {
-                    displayText: "🔄 GENERATE AGAIN",
+                    displayText: "🔄 𝙶𝙴𝙽𝙴𝚁𝙰𝚃𝙴 𝙰𝙶𝙰𝙸𝙽",
                     id: `.pair ${phoneNumber}`
                 }
             }
