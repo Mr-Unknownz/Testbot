@@ -2,6 +2,7 @@
 const { cmd } = require("../lib/command");
 const axios = require("axios");
 const config = require("../settings");
+
 cmd({
   pattern: "pair",
   alias: ["paircode", "pc"],
@@ -9,10 +10,22 @@ cmd({
   desc: "Get pairing code from Queen Jusmy Pair System",
   category: "owner",
   filename: __filename
-}, 
+},
 async (client, message, match) => {
   try {
-    let number = (match || "").replace(/[^0-9]/g, "");
+
+    // ==========================
+    // SAFE MATCH HANDLING (FIX)
+    // ==========================
+    let input = "";
+
+    if (typeof match === "string") input = match;
+    else if (Array.isArray(match) && match[0]) input = match[0];
+    else input = "";
+
+    let number = input.trim().replace(/[^0-9]/g, "");
+
+    // ==========================
 
     if (!number)
       return message.reply("📌 *Usage:* .pair 947XXXXXXXX");
@@ -23,7 +36,6 @@ async (client, message, match) => {
     await message.reply("⏳ *_𝙶𝙴𝙽𝙴𝚁𝙰𝚃𝙸𝙽𝙶 𝚈𝙾𝚄𝚁 𝚀𝚄𝙴𝙴𝙽 𝙹𝚄𝚂𝙼𝚈 𝙿𝙰𝙸𝚁 𝙲𝙾𝙳𝙴..._*");
 
     const url = `https://queen-jusmy-pair.onrender.com/pair?number=${number}`;
-
     const res = await axios.get(url, {
       timeout: 15000,
       validateStatus: s => s < 500
@@ -35,9 +47,9 @@ async (client, message, match) => {
       return message.reply("❌ Pair code not received — try again.");
     }
 
-    // ---------------------------
-    // MAIN PAIR CODE MESSAGE
-    // ---------------------------
+    // ==========================
+    // MAIN PAIR MESSAGE
+    // ==========================
     const mainMsg = `
 *🔐 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐏ᴀɪʀɪɴɢ 𝐒ʏꜱᴛᴇᴍ 🧚‍♀️*
 
@@ -46,8 +58,7 @@ async (client, message, match) => {
 ✨ *𝚈𝙾𝚄𝚁 𝙿𝙰𝙸𝚁 𝙲𝙾𝙳𝙴:*  
 \`\`\`${code}\`\`\`
 
-⚠️ ∂σ ησт ѕнαяє тнιѕ ωιтн αηуσηє.
-⚡ ναℓι∂ σηℓу ƒσя ƒєω мιηυтєѕ.
+⚠️ Do NOT share this with anyone.
     `;
 
     await client.sendMessage(
@@ -56,14 +67,14 @@ async (client, message, match) => {
       { quoted: message }
     );
 
-    // ---------------------------------------
-    // IF BUTTON FEATURE IS ENABLED IN CONFIG
-    // ---------------------------------------
+    // ==========================
+    // BUTTON ENABLED?
+    // ==========================
     if (config.BUTTON === true) {
       await client.sendMessage(
         message.from,
         {
-          text: `💬 *Ｐᴀɪʀ Ｃᴏᴅᴇ Ｃᴏɴᴛʀᴏʟᴇꜱ*\n▸ ᴄʜᴏᴏꜱᴇ ᴀɴ ᴀᴄᴛɪᴏɴ ʙᴇʟᴏᴡ 👇`,
+          text: `💬 *Ｐᴀɪʀ Ｃᴏᴅᴇ Ｃᴏɴᴛʀᴏʟᴇꜱ*\n▸ choose an action 👇`,
           buttons: [
             {
               buttonId: `copy_${code}`,
