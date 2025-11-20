@@ -48,16 +48,37 @@ cmd({
     }
 
     // Fancy caption
-    let captionText = quoted[mtype]?.caption ? `𝐂ᴀᴘᴛɪᴏɴ : *${quoted[mtype].caption}*\n\n` : "";
+    let captionText = quoted[mtype]?.caption ? `*🧾 𝐂ᴀᴘᴛɪᴏɴ :* ${quoted[mtype].caption}\n\n` : "";
 
     if (message.key.remoteJid.endsWith("@g.us")) {
-      const groupJid = message.key.remoteJid;
-      const groupMetadata = await client.groupMetadata(groupJid).catch(() => null);
-      const groupName = groupMetadata?.subject || groupJid.split("@")[0];
-      const senderNumber = message.key.participant?.split("@")[0] || "Unknown";
-      const groupLink = groupMetadata?.id ? `https://chat.whatsapp.com/${groupMetadata.id}` : "N/A";
+  const groupJid = message.key.remoteJid;
 
-      captionText += `📌 *𝐅ʀᴏᴍ :* @${senderNumber}\n📂 _𝐆ʀᴏᴜᴘ:_ ${groupName}\n🔗 _𝐋ɪɴᴋ:_ ${groupLink}`;
+  // Get metadata
+  const groupMetadata = await client.groupMetadata(groupJid).catch(() => null);
+  const groupName = groupMetadata?.subject || groupJid.split("@")[0];
+
+  // Sender
+  const senderNumber = message.key.participant?.split("@")[0] || "Unknown";
+
+  // Check bot admin
+  const isBotAdmin = groupMetadata?.participants?.some(
+    p => p.id === client.user.id && (p.admin === "admin" || p.admin === "superadmin")
+  );
+
+  let groupLink = "~🔐 Bot is not admin — Link disabled~";
+
+  // Only if bot is admin → get link
+  if (isBotAdmin) {
+    try {
+      const inviteCode = await client.groupInviteCode(groupJid);
+      groupLink = `https://chat.whatsapp.com/${inviteCode}`;
+    } catch (e) {
+      groupLink = "N/A";
+    }
+  }
+
+
+      captionText += `📌 *𝐅ʀᴏᴍ :* @${senderNumber}\n📂 *𝐆ʀᴏᴜᴘ:* ${groupName}\n🔗 *𝐋ɪɴᴋ:* ${groupLink}`;
     } else {
       const senderNumber = message.key.remoteJid.split("@")[0];
       captionText += `📌 *𝐅ʀᴏᴍ:* @${senderNumber}`;
