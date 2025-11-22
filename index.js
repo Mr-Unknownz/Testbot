@@ -105,22 +105,6 @@ async function connectToWA() {;
         msgRetryCounterCache
     })
 
-		   // ALWAYS ONLINE SYSTEM
-    if (config.ALWAYS_ONLINE === true) {
-
-        // bot always online
-        setInterval(() => {
-            conn.sendPresenceUpdate('available');
-        }, 10000); // every 10 sec bot stays online
-
-    } else {
-
-        // bot behaves like normal WhatsApp
-        conn.sendPresenceUpdate('unavailable'); 
-        // no presence loop -> last seen show normally
-    }
-
-
   conn.ev.on('connection.update', async (update) => {
         const {
             connection,
