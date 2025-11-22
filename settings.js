@@ -5,10 +5,10 @@ function convertToBool(text, fault = 'true') {
 }
 module.exports = {
 
-SESSION_ID: process.env.SESSION_ID || 'QJUSMY=utQEDaha#BJzEuB_Uq8Ce7-TY8Nw3mB75sSXrouBPM3zExI6Y7Bk',
+SESSION_ID: process.env.SESSION_ID || 'QJUSMY=L5JinR6a#dLTonFntLnfVF4zHjF3mF5YlYibjB78eSC_aBLyPSUQ',
 MONGODB: process.env.MONGODB || "mongodb://mongo:hSKOyytRSHAikyAFUajcmkoJTEcgoBTR@trolley.proxy.rlwy.net:29757",  
 PREFIX: process.env.PREFIX || '.',
-ALIVE_IMG: process.env.ALIVE_IMG || 'https://files.catbox.moe/y4e5zy.jpg',   
+ALIVE_IMG: process.env.ALIVE_IMG || 'https://files.catbox.moe/xo1wiq.png',   
 FOOTER: process.env.FOOTER || '> *©卩ᴏᴡᴇʀᴇᴅ ʙʏ < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️*',
 ALIVE_MSG: process.env.ALIVE_MSG || '👾 Ｗ𝙴𝙻𝙲𝙾𝙼𝙴 𝚃𝙾 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️',
 BOT_NAME: process.env.BOT_NAME || '< | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️',
