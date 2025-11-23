@@ -1,34 +1,67 @@
-const { cmd } = require("../lib/command");
+const { cmd } = require('../lib/command');
+const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
+const config = require('../settings');
 
 cmd({
-  pattern: "send",
-  alias: ["sendme", "save", "evpn", "Ewhm", "Evapan", "dapan", "Dapan", "dpn"],
-  react: '📤',
-  desc: "Forwards quoted image/video/status back to user",
-  category: "utility",
-  filename: __filename
-}, async (client, message, match, { from }) => {
-  try {
-    if (!match.quoted) return await client.sendMessage(from, { text: "*🍁 𝐏ʟᴇᴀꜱᴇ 𝐑ᴇᴘʟʏ 𝐓ᴏ 𝐀 𝐌ᴇꜱꜱᴀɢᴇ ...!*" }, { quoted: message });
+    pattern: "save",
+    alias: ["ss", "statussave"],
+    react: "💾",
+    desc: "Save WhatsApp status",
+    category: "media",
+}, async (socket, msg) => {
+    try {
+        const from = msg.key.remoteJid;
+        const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
 
-    const quoted = match.quoted;
-    let buffer;
-    let messageContent = {};
-    const options = { quoted: message };
+        if (!quoted) {
+            return await socket.sendMessage(from, {
+                text: `❗ *Please reply to a WhatsApp Status to save it!*\n\nExamples:\n• Reply to status → .save\n• Reply to status → .ss`
+            }, { quoted: msg });
+        }
 
-    // ✅ Detect type correctly
-    if (quoted.download) {
-      buffer = await quoted.download();
-      if (quoted.mtype === "imageMessage") messageContent = { image: buffer, caption: quoted.text || '' };
-      else if (quoted.mtype === "videoMessage") messageContent = { video: buffer, caption: quoted.text || '', mimetype: quoted.mimetype || "video/mp4" };
-      else if (quoted.mtype === "audioMessage") messageContent = { audio: buffer, mimetype: "audio/mp4", ptt: quoted.ptt || false };
-      else return await client.sendMessage(from, { text: "❌ Only image/video/audio messages are supported!" }, { quoted: message });
+        // destination
+        const sendTo = config.STATUS_SAVE_PATH === "same-chat" ? from : socket.user.id;
+
+        let buffer, mimetype;
+
+        // IMAGE STATUS
+        if (quoted.imageMessage) {
+            const stream = await downloadContentFromMessage(quoted.imageMessage, 'image');
+            buffer = Buffer.from([]);
+            for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+            mimetype = "image/jpeg";
+        }
+
+        // VIDEO STATUS
+        else if (quoted.videoMessage) {
+            const stream = await downloadContentFromMessage(quoted.videoMessage, 'video');
+            buffer = Buffer.from([]);
+            for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+            mimetype = "video/mp4";
+        }
+
+        // UNKNOWN FORMAT
+        else {
+            return socket.sendMessage(from, {
+                text: "❌ *This status type cannot be saved!*"
+            }, { quoted: msg });
+        }
+
+        // SEND MEDIA TO LOCATION
+        await socket.sendMessage(sendTo, {
+            [mimetype.startsWith("image") ? "image" : "video"]: buffer,
+            caption: `💾 *Saved status successfully!*`
+        }, { quoted: msg });
+
+        // React to user
+        await socket.sendMessage(from, {
+            react: { text: "✅", key: msg.key }
+        });
+
+    } catch (e) {
+        console.error(e);
+        await socket.sendMessage(msg.key.remoteJid, {
+            text: `⚠️ Error: ${e.message}`
+        }, { quoted: msg });
     }
-
-    await client.sendMessage(from, messageContent, options);
-
-  } catch (error) {
-    console.error("Send Command Error:", error);
-    await client.sendMessage(from, { text: "❌ Error sending message:\n" + error.message }, { quoted: message });
-  }
 });
