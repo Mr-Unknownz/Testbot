@@ -26,6 +26,7 @@
     "ytdlp-nodejs": "latest",
     "btch-downloader": "latest",
     "pino": "^9.6.0",
+    "g-i-s": "^2.1.6",
     "pm2": "^6.0.8",
     "util": "^0.12.4",
     "express": "latest",
