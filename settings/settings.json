@@ -18,6 +18,7 @@
   "ANTI_DELETE": "true",
   "ANTI_VV": "inbox",
   "ANTI_DEL_PATH": "inbox",
+  "STATUS_SAVE_PATH": "inbox",
   "OWNER_NAME": "_Mr Unknown X Luxalgo_",
   "OWNER_NUMBER": [
     "94723975388",
