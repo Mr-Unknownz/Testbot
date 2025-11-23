@@ -1,82 +1,142 @@
-const { cmd } = require("../lib/command");
-const axios = require("axios");
-const cheerio = require("cheerio");
-const config = require("../settings");
+const { cmd } = require('../lib/command');
+const gis = require("g-i-s");
+const {
+  prepareWAMessageMedia,
+  generateWAMessageFromContent,
+  proto,
+} = require("@whiskeysockets/baileys");
 
 cmd({
-    pattern: "img",
-    alias: ["image", "searchimg", "photo"],
-    react: "🖼️",
-    desc: "Search and download high-quality images from multiple sources",
-    category: "fun",
-    use: ".img <keywords> [page]",
-    filename: __filename
-}, async (conn, mek, m, { reply, args, from }) => {
-    try {
-        if (!args.length) return reply("🖼️ Usage: .img <query> [page]\nExample: .img cute cats 2");
+  pattern: "img",
+  react: "📸",
+  desc: "Google Image Search",
+  category: "media"
+}, async (socket, msg, args) => {
 
-        const pageArg = args[args.length - 1];
-        const page = isNaN(pageArg) ? 1 : parseInt(pageArg);
-        const query = isNaN(pageArg) ? args.join(" ") : args.slice(0, -1).join(" ");
+  try {
+    const from = msg.key.remoteJid;
+    const query = args.join(" ");
+    const pushname = msg.pushName || "there";
 
-        await reply(`🔍 Searching images for *${query}* (Page ${page}) ...`);
-
-        // ======= 1️⃣ Google Images =======
-        const googleUrl = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}&start=${(page-1)*20}`;
-        const { data: gData } = await axios.get(googleUrl, {
-            headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" }
-        });
-        const $ = cheerio.load(gData);
-        let images = [];
-        $("img").each((i, el) => {
-            const img = $(el).attr("data-iurl") || $(el).attr("data-src") || $(el).attr("src");
-            if (img && img.startsWith("http")) images.push(img);
-        });
-
-        // ======= 2️⃣ Unsplash API =======
-        try {
-            const unsplashRes = await axios.get(`https://source.unsplash.com/featured/800x800/?${encodeURIComponent(query)}`);
-            if (unsplashRes.request.res.responseUrl) images.push(unsplashRes.request.res.responseUrl);
-        } catch(e) { }
-
-        // ======= 3️⃣ Pixabay =======
-        try {
-            const pixabayRes = await axios.get(`https://pixabay.com/images/search/${encodeURIComponent(query)}/?pagi=${page}`);
-            const $$ = cheerio.load(pixabayRes.data);
-            $$("img").each((i, el) => {
-                const img = $$(el).attr("data-src") || $$(el).attr("src");
-                if (img && img.startsWith("http")) images.push(img);
-            });
-        } catch(e) { }
-
-        if (!images.length) return reply("❌ No images found. Try another keyword or page.");
-
-        // Take unique & top 10 images
-        images = [...new Set(images)].slice(0, 10);
-
-        for (const imgUrl of images) {
-            await conn.sendMessage(from, {
-                image: { url: imgUrl },
-                caption: `📷 Result for: *${query}*\n📄 Page: ${page}\n\n${config.FOOTER}`
-            }, { quoted: mek });
-            await new Promise(r => setTimeout(r, 1200));
-        }
-
-        // Pagination buttons
-        if (config.BUTTON === 'true') {
-            let buttons = [];
-            if (page > 1) buttons.push({ buttonId: `.img ${query} ${page-1}`, buttonText: { displayText: "⏮ Prev" }, type: 1 });
-            buttons.push({ buttonId: `.img ${query} ${page+1}`, buttonText: { displayText: "⏭ Next" }, type: 1 });
-            await conn.sendMessage(from, {
-                text: `🔎 Results for *${query}* - Page ${page}`,
-                footer: config.FOOTER,
-                buttons,
-                headerType: 2
-            }, { quoted: mek });
-        }
-
-    } catch (error) {
-        console.error("Multi-Source Image Error:", error);
-        reply(`❌ Error: ${error.message || "Failed to fetch images"}`);
+    if (!query) {
+      return await socket.sendMessage(from, {
+        text: `🔍 *Google Image Search*\n\nPlease enter a query!\n\nExample:\n.img cat`,
+      }, { quoted: msg });
     }
-});
+
+    gis(query, async (error, result) => {
+      if (error || !result || result.length < 12) {
+        return await socket.sendMessage(from, {
+          text: "❌ Not enough images found. Try another keyword.",
+        }, { quoted: msg });
+      }
+
+      const img1 = result[0].url;
+      const img2 = result[1].url;
+      const moreImages = result.slice(2, 12).map(r => r.url); // 10 images
+
+      const caption =
+`
+╭───────────────⭓ 
+│  👤 Requested by: ${pushname}
+│  🔍 Query: ${query}
+│  
+│  📸 Reply:
+│  
+│  ╭─────────────●●►
+│  ├ 🖼️ *1* → Image type
+│  ├ 📄 *2* → Document type
+│  ├ 🖼️ *3* → 10 more images
+│  ╰─────────────●●►
+│  
+│  ● KING SANDESH MD ●
+╰───────────────⭓`;
+
+      const sentMsg = await socket.sendMessage(from, {
+        image: { url: img1 },
+        caption,
+      }, { quoted: msg });
+
+      const results = result.slice(0, 10);
+      const cards = [];
+
+      for (let i = 0; i < results.length; i++) {
+        const imageUrl = results[i].url;
+
+        const media = await prepareWAMessageMedia(
+          { image: { url: imageUrl } },
+          { upload: socket.waUploadToServer }
+        );
+
+        const header = proto.Message.InteractiveMessage.Header.create({
+          ...media,
+          title: `📸 Result ${i + 1}: ${query}\n\n👤 Requested by: ${pushname}`,
+          gifPlayback: true,
+          subtitle: "KING SANDESH MD",
+          hasMediaAttachment: false,
+        });
+
+        cards.push({
+          header,
+          body: { text: `\n\n● KING SANDESH MD ●` },
+          nativeFlowMessage: {},
+        });
+      }
+
+      const carouselMessage = generateWAMessageFromContent(
+        from,
+        {
+          viewOnceMessage: {
+            message: {
+              interactiveMessage: {
+                body: { text: "" },
+                carouselMessage: {
+                  cards,
+                  messageVersion: 1,
+                },
+              },
+            },
+          }
+        },
+        { quoted: msg }
+      );
+
+      await socket.relayMessage(from, carouselMessage.message, {
+        messageId: carouselMessage.key.id,
+      });
+
+      const msgId = sentMsg.key.id;
+
+      const messageListener = async (messageUpdate) => {
+        try {
+          const mek = messageUpdate.messages[0];
+          if (!mek.message) return;
+
+          const isReply = mek.message.extendedTextMessage?.contextInfo?.stanzaId === msgId;
+          if (!isReply) return;
+          if (mek.key.remoteJid !== from) return;
+
+          const text = mek.message.conversation || mek.message.extendedTextMessage?.text;
+          await socket.sendMessage(from, { react: { text: '✅', key: mek.key } });
+
+          switch (text.trim()) {
+            case "1":
+              await socket.sendMessage(from, {
+                image: { url: img1 },
+                caption: `✅ *Here is your image!*\n> KING SANDESH MD`,
+              }, { quoted: mek });
+              break;
+
+            case "2":
+              await socket.sendMessage(from, {
+                document: { url: img2 },
+                mimetype: "image/jpeg",
+                fileName: `img_${Date.now()}.jpg`,
+                caption: `📄 *Here is your image as document!*\n> KING SANDESH MD`,
+              }, { quoted: mek });
+              break;
+
+            case "3":
+              for (let i = 0; i < moreImages.length; i++) {
+                await socket.sendMessage(from, {
+                  image: { url: moreImages[i] },
