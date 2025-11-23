@@ -1,6 +1,6 @@
 const { cmd } = require("../lib/command");
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
-const config = require("../settings");
+const config = require("../settings/settings.json");
 
 const ANTI_VV = config.ANTI_VV || 'inbox';
 
