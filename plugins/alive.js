@@ -1,6 +1,6 @@
 const { cmd } = require('../lib/command');
 const os = require("os");
-const config = require('../settings');
+const config = require('../settings/settings.json');
 const moment = require("moment-timezone");
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson, jsonformat} = require('../lib/functions');
 
