@@ -169,7 +169,7 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
           body: 'ᴄʀᴇᴀᴛᴇᴅ ʙʏ ᴘᴀᴛʜᴜᴍ ᴍᴀʟꜱᴀʀᴀ x ꜱᴀɴᴅᴇꜱʜ ʙʜᴀꜱʜᴀɴᴀ',
           mediaType: 1,
           sourceUrl: "",
-          thumbnailUrl: "https://files.catbox.moe/y4e5zy.jpg",
+          thumbnailUrl: "https://files.catbox.moe/xo1wiq.png",
           renderLargerThumbnail: true,
           showAdAttribution: true
         }
