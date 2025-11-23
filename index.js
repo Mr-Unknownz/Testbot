@@ -125,7 +125,7 @@ conn.groupAcceptInvite(inviteCode); 
          await conn.sendMessage(
            "94741259325@s.whatsapp.net",
          {
-       image: { url: "https://files.catbox.moe/y4e5zy.jpg" }, // image url
+       image: { url: "https://files.catbox.moe/xo1wiq.png" }, // image url
        caption: `> Connected Successfully 🩷🎀\n\n╭───❍「 *✅CONNECTED BOT* 」\n┃ _QUEEN-JUSMY-MD_\n╰───────────❍\n╭───❍「 *🌐BOT WEB PAGE* 」\n┃ Comming Soon 😐👊\n╰───────────❍\n╭───❍「 *🫳JOIN CHANNEL* 」\n┃ https://whatsapp.com/channel/0029Vb7bwXEEAKWNJgBICJ0w\n┃\n┃ https://whatsapp.com/channel/0029Vb5saAU4Y9lfzhgBmS2N\n╰───────────❍\n╭───❍「 *👤BOT OWNERS* 」\n┃ _Mr.Sandesh Bhashana_\n┃ _Mr.Pathum Malsara_\n╰───────────❍\n╭───❍「 *📈SYSTEM STATUS* 」\n┃ ░░░░░░░░░░░░░░░░░░░ 100%\n╰───────────❍\n╭───❍「 *📍BOT PREFIX* 」\n┃ _Configure Your Prefix_ [ ${prefix} ]\n╰───────────❍\n╭───❍「 *⚙️AUTOMATION BY* 」\n┃ *QUEEN-JUSMY-MD 🧚*\n╰───────────❍`
      }
    );  
@@ -133,7 +133,7 @@ conn.groupAcceptInvite(inviteCode); 
          await conn.sendMessage(
            "94723975388@s.whatsapp.net",
          {
-       image: { url: "https://files.catbox.moe/y4e5zy.jpg" }, // image url
+       image: { url: "https://files.catbox.moe/xo1wiq.png" }, // image url
        caption: `> Connected Successfully 🩷🎀\n\n╭───❍「 *✅CONNECTED BOT* 」\n┃ _QUEEN-JUSMY-MD_\n╰───────────❍\n╭───❍「 *🌐BOT WEB PAGE* 」\n┃ Comming Soon 😐👊\n╰───────────❍\n╭───❍「 *🫳JOIN CHANNEL* 」\n┃ https://whatsapp.com/channel/0029Vb7bwXEEAKWNJgBICJ0w\n┃\n┃ https://whatsapp.com/channel/0029Vb5saAU4Y9lfzhgBmS2N\n╰───────────❍\n╭───❍「 *👤BOT OWNERS* 」\n┃ _Mr.Sandesh Bhashana_\n┃ _Mr.Pathum Malsara_\n╰───────────❍\n╭───❍「 *📈SYSTEM STATUS* 」\n┃ ░░░░░░░░░░░░░░░░░░░ 100%\n╰───────────❍\n╭───❍「 *📍BOT PREFIX* 」\n┃ _Configure Your Prefix_ [ ${prefix} ]\n╰───────────❍\n╭───❍「 *⚙️AUTOMATION BY* 」\n┃ *QUEEN-JUSMY-MD 🧚*\n╰───────────❍`
      }
    );
