@@ -3,8 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-const GITHUB_USER = process.env.GITHUB_USER || '';
-const GITHUB_REPO = process.env.GITHUB_REPO || '';
+const GITHUB_USER = process.env.GITHUB_USER || 'vijitharanawakage';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'Testbot';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 const REMOTE_PATH = 'settings/settings.json';
 const LOCAL_PATH = path.join(__dirname, 'local-settings.json');
