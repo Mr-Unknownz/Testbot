@@ -24,6 +24,7 @@ ALWAYS_ONLINE: process.env.ALWAYS_ONLINE || 'false',
 ANTI_DELETE: process.env.ANTI_DELETE || 'true',
 ANTI_VV: process.env.ANTI_VV || 'inbox',// type same-chat for chat owner upload and type inbox for bot inbox upload
 ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',// same-chat for owner send and inbox for bot inbox send
+STATUS_SAVE_PATH: process.env.STATUS_SAVE_PATH || 'inbox',
 OWNER_NAME: process.env.OWNER_NAME || '_Mr Unknown X Luxalgo_',
 OWNER_NUMBER: process.env.OWNER_NUMBER || ['94723975388','94741259325'],
 OWNER_REACT: process.env.OWNER_REACT || 'true',
