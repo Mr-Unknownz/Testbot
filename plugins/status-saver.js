@@ -24,17 +24,6 @@ cmd({
       else if (quoted.mtype === "audioMessage") messageContent = { audio: buffer, mimetype: "audio/mp4", ptt: quoted.ptt || false };
       else return await client.sendMessage(from, { text: "❌ Only image/video/audio messages are supported!" }, { quoted: message });
     }
-    // ✅ View once / status messages
-    else if (quoted.viewOnceMessage?.message) {
-      const inner = quoted.viewOnceMessage.message;
-      const type = Object.keys(inner)[0]; // imageMessage / videoMessage
-      buffer = await inner[type].download();
-      if (type === "imageMessage") messageContent = { image: buffer, caption: inner[type].caption || '' };
-      else if (type === "videoMessage") messageContent = { video: buffer, caption: inner[type].caption || '', mimetype: inner[type].mimetype || "video/mp4" };
-      else return await client.sendMessage(from, { text: "❌ Only image/video status is supported!" }, { quoted: message });
-    } else {
-      return await client.sendMessage(from, { text: "❌ Only image/video/status messages are supported!" }, { quoted: message });
-    }
 
     await client.sendMessage(from, messageContent, options);
 
