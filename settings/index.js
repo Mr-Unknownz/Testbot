@@ -23,6 +23,7 @@ const ALLOWED = [
   'ANTI_DELETE',
   'ANTI_VV',
   'ANTI_DEL_PATH',
+  'STATUS_SAVE_PATH',
   'AUTO_READ_STATUS'
 ];
 
