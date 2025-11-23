@@ -12,7 +12,6 @@ cmd({
   desc: "Google Image Search",
   category: "media"
 }, async (socket, msg, args) => {
-
   try {
     const from = msg.key.remoteJid;
     const query = args.join(" ");
@@ -33,23 +32,22 @@ cmd({
 
       const img1 = result[0].url;
       const img2 = result[1].url;
-      const moreImages = result.slice(2, 12).map(r => r.url); // 10 images
+      const moreImages = result.slice(2, 12).map(r => r.url);
 
       const caption =
-`
-╭───────────────⭓ 
-│  👤 Requested by: ${pushname}
-│  🔍 Query: ${query}
+`╭───────────────⭓ 
+│ 👤 Requested by: ${pushname}
+│ 🔍 Query: ${query}
 │  
-│  📸 Reply:
+│ 📸 Reply:
 │  
-│  ╭─────────────●●►
-│  ├ 🖼️ *1* → Image type
-│  ├ 📄 *2* → Document type
-│  ├ 🖼️ *3* → 10 more images
-│  ╰─────────────●●►
+│ ╭─────────────●●►
+│ ├ 🖼️ *1* → Image type
+│ ├ 📄 *2* → Document type
+│ ├ 🖼️ *3* → 10 more images
+│ ╰─────────────●●►
 │  
-│  ● KING SANDESH MD ●
+│ ● KING SANDESH MD ●
 ╰───────────────⭓`;
 
       const sentMsg = await socket.sendMessage(from, {
@@ -62,7 +60,6 @@ cmd({
 
       for (let i = 0; i < results.length; i++) {
         const imageUrl = results[i].url;
-
         const media = await prepareWAMessageMedia(
           { image: { url: imageUrl } },
           { upload: socket.waUploadToServer }
@@ -92,38 +89,41 @@ cmd({
                 body: { text: "" },
                 carouselMessage: {
                   cards,
-                  messageVersion: 1,
-                },
-              },
-            },
+                  messageVersion: 1
+                }
+              }
+            }
           }
         },
         { quoted: msg }
       );
 
       await socket.relayMessage(from, carouselMessage.message, {
-        messageId: carouselMessage.key.id,
+        messageId: carouselMessage.key.id
       });
 
       const msgId = sentMsg.key.id;
 
-      const messageListener = async (messageUpdate) => {
+      const listener = async (update) => {
         try {
-          const mek = messageUpdate.messages[0];
-          if (!mek.message) return;
+          const mek = update.messages?.[0];
+          if (!mek?.message) return;
 
           const isReply = mek.message.extendedTextMessage?.contextInfo?.stanzaId === msgId;
           if (!isReply) return;
           if (mek.key.remoteJid !== from) return;
 
           const text = mek.message.conversation || mek.message.extendedTextMessage?.text;
-          await socket.sendMessage(from, { react: { text: '✅', key: mek.key } });
+
+          await socket.sendMessage(from, {
+            react: { text: "✅", key: mek.key }
+          });
 
           switch (text.trim()) {
             case "1":
               await socket.sendMessage(from, {
                 image: { url: img1 },
-                caption: `✅ *Here is your image!*\n> KING SANDESH MD`,
+                caption: `✅ *Here is your image!*\n> KING SANDESH MD`
               }, { quoted: mek });
               break;
 
@@ -132,7 +132,7 @@ cmd({
                 document: { url: img2 },
                 mimetype: "image/jpeg",
                 fileName: `img_${Date.now()}.jpg`,
-                caption: `📄 *Here is your image as document!*\n> KING SANDESH MD`,
+                caption: `📄 *Here is your image as document!*\n> KING SANDESH MD`
               }, { quoted: mek });
               break;
 
@@ -140,3 +140,37 @@ cmd({
               for (let i = 0; i < moreImages.length; i++) {
                 await socket.sendMessage(from, {
                   image: { url: moreImages[i] },
+                  caption: `🖼️ Extra Image ${i + 1}\n> KING SANDESH MD`
+                }, { quoted: mek });
+
+                await new Promise(res => setTimeout(res, 700));
+              }
+              break;
+
+            default:
+              await socket.sendMessage(from, {
+                text: "❌ Reply must be: 1 / 2 / 3 only."
+              }, { quoted: mek });
+              break;
+          }
+
+        } catch (err) {
+          console.log("Reply Error: ", err);
+        }
+      };
+
+      socket.ev.on("messages.upsert", listener);
+
+      setTimeout(() => {
+        socket.ev.off("messages.upsert", listener);
+      }, 2 * 60 * 1000);
+
+    });
+
+  } catch (e) {
+    console.log("Main Error:", e);
+    await socket.sendMessage(msg.key.remoteJid, {
+      text: `⚠️ Error: ${e.message}`
+    });
+  }
+});
