@@ -1,67 +1,78 @@
 const { cmd } = require('../lib/command');
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
+const fs = require('fs');
 const config = require('../settings');
 
 cmd({
-    pattern: "save",
-    alias: ["ss", "statussave"],
-    react: "💾",
-    desc: "Save WhatsApp status",
-    category: "media",
-}, async (socket, msg) => {
-    try {
-        const from = msg.key.remoteJid;
-        const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
-
-        if (!quoted) {
-            return await socket.sendMessage(from, {
-                text: `❗ *Please reply to a WhatsApp Status to save it!*\n\nExamples:\n• Reply to status → .save\n• Reply to status → .ss`
-            }, { quoted: msg });
-        }
-
-        // destination
-        const sendTo = config.STATUS_SAVE_PATH === "same-chat" ? from : socket.user.id;
-
-        let buffer, mimetype;
-
-        // IMAGE STATUS
-        if (quoted.imageMessage) {
-            const stream = await downloadContentFromMessage(quoted.imageMessage, 'image');
-            buffer = Buffer.from([]);
-            for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
-            mimetype = "image/jpeg";
-        }
-
-        // VIDEO STATUS
-        else if (quoted.videoMessage) {
-            const stream = await downloadContentFromMessage(quoted.videoMessage, 'video');
-            buffer = Buffer.from([]);
-            for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
-            mimetype = "video/mp4";
-        }
-
-        // UNKNOWN FORMAT
-        else {
-            return socket.sendMessage(from, {
-                text: "❌ *This status type cannot be saved!*"
-            }, { quoted: msg });
-        }
-
-        // SEND MEDIA TO LOCATION
-        await socket.sendMessage(sendTo, {
-            [mimetype.startsWith("image") ? "image" : "video"]: buffer,
-            caption: `💾 *Saved status successfully!*`
-        }, { quoted: msg });
-
-        // React to user
-        await socket.sendMessage(from, {
-            react: { text: "✅", key: msg.key }
-        });
-
-    } catch (e) {
-        console.error(e);
-        await socket.sendMessage(msg.key.remoteJid, {
-            text: `⚠️ Error: ${e.message}`
-        }, { quoted: msg });
+  pattern: "save",
+  alias: ["statussave", "ssave"],
+  desc: "Save WhatsApp status by replying to it",
+  category: "tools",
+  react: "📥",
+}, 
+async (message, client, args) => {
+  
+  try {
+    if (!message.quoted) {
+      return await message.reply("❗ *Reply to a WhatsApp status (image/video) to save it.*");
     }
+
+    const caption = args.join(" ") || ""; // user caption support
+    const mime = message.quoted.mtype;
+
+    if (!mime.includes("image") && !mime.includes("video")) {
+      return await message.reply("❗ *You must reply to an Image/Video status.*");
+    }
+
+    // ─────────────────────────────────────
+    // 0. GET SENDER NUMBER
+    // ─────────────────────────────────────
+    const sender = message.quoted.key?.participant || message.quoted.participant || message.quoted.sender;
+    const senderNum = sender ? sender.split("@")[0] : "Unknown";
+
+    // ─────────────────────────────────────
+    // 1. DOWNLOAD STATUS
+    // ─────────────────────────────────────
+    const buffer = await downloadContentFromMessage(message.quoted, mime.split("/")[0]);
+    let temp = Buffer.from([]);
+
+    for await (const chunk of buffer) {
+      temp = Buffer.concat([temp, chunk]);
+    }
+
+    // ─────────────────────────────────────
+    // 2. SEND LOCATION (Inbox / Same-chat)
+    // ─────────────────────────────────────
+    const mode = config.STATUS_SAVE_PATH || "inbox";
+
+    let targetJID = (mode === "same-chat")
+      ? message.chat
+      : client.user.id; // bot inbox
+
+    // ─────────────────────────────────────
+    // 3. BUILD FINAL CAPTION
+    // ─────────────────────────────────────
+    const finalCaption =
+`📥 *Status Saved Successfully!*
+
+👤 *Uploaded By:* +${senderNum}
+${caption ? `\n📝 *Caption:*\n${caption}\n` : ""}
+
+${config.FOOTER}`;
+
+    // ─────────────────────────────────────
+    // 4. SEND MEDIA
+    // ─────────────────────────────────────
+    if (mime.includes("image")) {
+      await client.sendMessage(targetJID, { image: temp, caption: finalCaption });
+    } else {
+      await client.sendMessage(targetJID, { video: temp, caption: finalCaption });
+    }
+
+    await message.reply("✅ *Status saved successfully!*");
+
+  } catch (err) {
+    console.log(err);
+    await message.reply("❗ *Error while saving status!*");
+  }
 });
