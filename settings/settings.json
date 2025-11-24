@@ -9,7 +9,7 @@
   "MODE": "groups",
   "BUTTON": "true",
   "MENTION_REPLY": "false",
-  "AUTO_REPLY": "true",
+  "AUTO_REPLY": "false",
   "AUTO_VOICE": "false",
   "AUTO_TYPING": "false",
   "AUTO_BIO": "false",
