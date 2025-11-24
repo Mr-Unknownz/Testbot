@@ -16,5 +16,6 @@
   "ANTI_DELETE": "true",
   "ANTI_VV": "inbox",
   "ANTI_DEL_PATH": "inbox",
+  "STATUS_SAVE_PATH": "inbox",
   "AUTO_READ_STATUS": "true"
 }
