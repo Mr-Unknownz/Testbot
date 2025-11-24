@@ -1,5 +1,5 @@
-const { cmd } = require('.lib//command');
-const config = require('./settings/settings.json');
+const { cmd } = require('..lib/command');
+const config = require('../settings/settings.json');
 
 cmd({
     pattern: "admin",
