@@ -8,17 +8,13 @@ cmd({
   desc: "Get WhatsApp Channel info from link",
   category: "whatsapp",
   filename: __filename
-}, async (conn, mek, m, {
-  from,
-  args,
-  q,
-  reply
-}) => {
+}, async (conn, mek, m, { from, args, q, reply }) => {
+
   try {
-    if (!q) return reply("*❎ Please provide a WhatsApp Channel link.*\n\n*Example:* .cinfo https://whatsapp.com/channel/123456789");
+    if (!q) return reply("*❎ Please provide a WhatsApp Channel link.*\n\nExample: .cid https://whatsapp.com/channel/123456789");
 
     const match = q.match(/whatsapp\.com\/channel\/([\w-]+)/);
-    if (!match) return reply("⚠️ *Invalid channel link format.*\n\nMake sure it looks like:\nhttps://whatsapp.com/channel/xxxxxxxxx");
+    if (!match) return reply("⚠️ *Invalid channel link.*\nCorrect format:\nhttps://whatsapp.com/channel/xxxxxxxxx");
 
     const inviteId = match[1];
 
@@ -26,17 +22,18 @@ cmd({
     try {
       metadata = await conn.newsletterMetadata("invite", inviteId);
     } catch (e) {
-      return reply("> *❌ Failed to fetch channel metadata. Make sure the link is correct.*");
+      return reply("> ❌ *Failed to fetch channel metadata.*");
     }
 
     if (!metadata || !metadata.id) return reply("❌ Channel not found or inaccessible.");
 
-    const infoText = `*— 乂 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐂ʜᴀɴɴᴇʟ 𝐈ɴꜰᴏ —*\n\n` +
-      `🆔 *𝙸𝙳:* ${metadata.id}\n` +
-      `📌 *𝙽𝙰𝙼𝙴:* ${metadata.name}\n` +
-      `👥 *𝙵𝙾𝙻𝙻𝙾𝚆𝙴𝚁𝚂:* ${metadata.subscribers?.toLocaleString() || "N/A"}\n` +
-      `📅 *𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙾𝙽:* ${metadata.creation_time ? new Date(metadata.creation_time * 1000).toLocaleString("id-ID") : "Unknown"}\n\n` +
-      `${config.FOOTER};
+    const infoText = `*— 乂 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐂ʜᴀɴɴᴇʟ 𝐈ɴꜰᴏ —*\n
+🆔 *ID:* ${metadata.id}
+📌 *Name:* ${metadata.name}
+👥 *Followers:* ${metadata.subscribers?.toLocaleString() || "N/A"}
+📅 *Created On:* ${metadata.creation_time ? new Date(metadata.creation_time * 1000).toLocaleString("id-ID") : "Unknown"}
+
+${config.FOOTER}`;
 
     if (metadata.preview) {
       await conn.sendMessage(from, {
@@ -48,7 +45,8 @@ cmd({
     }
 
   } catch (error) {
-    console.error("❌ Error in .cinfo plugin:", error);
-    reply("⚠️ An unexpected error occurred.");
+    console.error("❌ Error in .cid command:", error);
+    reply("⚠️ *Unexpected error occurred.*");
   }
+
 });
