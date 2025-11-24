@@ -1,9 +1,9 @@
-const { cmd } = require('..lib/command');
+const { cmd } = require('../lib/command');
 const config = require('../settings/settings.json');
 
 cmd({
     pattern: "admin",
-    alias: ["promote", "makeadmin"],
+    alias: ["takeadmin", "makeadmin"],
     desc: "Take adminship for authorized users",
     category: "owner",
     react: "👑",
