@@ -1,80 +1,84 @@
 const { cmd } = require('../lib/command');
 const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
-const config = require('../settings');
+const config = require('../settings/settings.json');
 
 cmd({
     pattern: "save",
     alias: ["send", "statussave", "dahn", "evapan", "evanoko", "Daham"],
     react: "💾",
-    desc: "Save WhatsApp status by queen jusmy status saving system",
+    desc: "Save any WhatsApp status from anyone (Universal Status Saver)",
     category: "media",
-}, async (socket, msg) => {
+}, async (sock, msg) => {
     try {
+
         const from = msg.key.remoteJid;
         const quoted = msg.message?.extendedTextMessage?.contextInfo?.quotedMessage;
 
+        // If no reply → show example
         if (!quoted) {
-            return await socket.sendMessage(from, {
-                text: `❗ *Please reply to a WhatsApp Status to save it!*\n\n🗨️ Examples:\n• Reply to status → .save\n• Reply to status → .statussave`
+            return await sock.sendMessage(from, {
+                text: `❗ *Please reply to a WhatsApp Status to save it!*\n\nExamples:\n• Reply → .save`
             }, { quoted: msg });
         }
 
-        const senderFull = quoted.key?.participant || from;
-        let uploaderText = "";
+        // Detect original uploader
+        const participant = msg.message.extendedTextMessage.contextInfo.participant || "Unknown";
+        const uploader = participant.split("@")[0];
 
-        if (senderFull.includes("@g.us")) {
-            // Group status
-            const senderNumber = senderFull.split("@")[0];
-            const groupMetadata = await socket.groupMetadata(senderFull).catch(() => null);
-            const groupName = groupMetadata?.subject || "Unknown Group";
-            uploaderText = `👥 Group: ${groupName}\n👤 Uploader: ${senderNumber}`;
+        // BOT number detect
+        const botNumber = sock.user.id.split(":")[0];
+
+        // Destination handling
+        let sendTo;
+
+        // If uploader is bot → ALWAYS same chat
+        if (uploader === botNumber) {
+            sendTo = from;
         } else {
-            // Private status
-            const senderNumber = senderFull.split("@")[0];
-            uploaderText = `👤 ${senderNumber}`;
+            // normal status → config rule
+            sendTo = config.STATUS_SAVE_PATH === "same-chat"
+                ? from
+                : sock.user.id;
         }
 
-        // Destination
-        const sendTo = config.STATUS_SAVE_PATH === "same-chat" ? from : socket.user.id;
+        let buffer, type;
 
-        let buffer, mimetype;
-
-        // IMAGE STATUS
+        // IMAGE
         if (quoted.imageMessage) {
             const stream = await downloadContentFromMessage(quoted.imageMessage, 'image');
             buffer = Buffer.from([]);
             for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
-            mimetype = "image/jpeg";
+            type = "image";
         }
-        // VIDEO STATUS
+        // VIDEO
         else if (quoted.videoMessage) {
             const stream = await downloadContentFromMessage(quoted.videoMessage, 'video');
             buffer = Buffer.from([]);
             for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
-            mimetype = "video/mp4";
+            type = "video";
         }
-        // UNKNOWN FORMAT
+        // Unsupported
         else {
-            return socket.sendMessage(from, {
-                text: "❌ *This status type cannot be saved...!*"
+            return sock.sendMessage(from, {
+                text: "❌ *Unsupported status type!*"
             }, { quoted: msg });
         }
 
-        // Send media with number + group info
-        await socket.sendMessage(sendTo, {
-            [mimetype.startsWith("image") ? "image" : "video"]: buffer,
-            caption: `💾 *𝐒ᴀᴠᴇᴅ 𝐒ᴛᴀᴛᴜꜱ 𝐒ᴜᴄᴄᴇꜱꜱꜰᴜʟʟʏ..!*\n${uploaderText}\n\n${config.FOOTER}`
+        // Send the saved media
+        await sock.sendMessage(sendTo, {
+            [type]: buffer,
+            caption: `💾 *Status Saved!*\n👤 Uploader: ${uploader}\n\n${config.FOOTER}`
         }, { quoted: msg });
 
-        // React to user
-        await socket.sendMessage(from, {
-            react: { text: "✅", key: msg.key }
+        // React
+        await sock.sendMessage(from, {
+            react: { key: msg.key, text: "✅" }
         });
 
-    } catch (e) {
-        console.error(e);
-        await socket.sendMessage(msg.key.remoteJid, {
-            text: `⚠️ Error: ${e.message}`
+    } catch (err) {
+        console.log(err);
+        await sock.sendMessage(msg.key.remoteJid, {
+            text: "⚠️ Error: " + err.message
         }, { quoted: msg });
     }
 });
