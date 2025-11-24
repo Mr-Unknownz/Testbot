@@ -8,6 +8,7 @@ let current = { ...defaultConfig };
 // allowed settings to be updated by .set (we excluded OWNER_*, BOT_NAME)
 const ALLOWED = [
   'PREFIX',
+  'SESSION_ID',
   'ALIVE_MSG',
   'ALIVE_IMG',
   'FOOTER',
