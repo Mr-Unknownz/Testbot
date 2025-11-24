@@ -34,7 +34,8 @@ cmd({
       `🆔 *𝙸𝙳:* ${metadata.id}\n` +
       `📌 *𝙽𝙰𝙼𝙴:* ${metadata.name}\n` +
       `👥 *𝙵𝙾𝙻𝙻𝙾𝚆𝙴𝚁𝚂:* ${metadata.subscribers?.toLocaleString() || "N/A"}\n` +
-      `📅 *𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙾𝙽:* ${metadata.creation_time ? new Date(metadata.creation_time * 1000).toLocaleString("id-ID") : "Unknown"}`;
+      `📅 *𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙾𝙽:* ${metadata.creation_time ? new Date(metadata.creation_time * 1000).toLocaleString("id-ID") : "Unknown"}\n\n` +
+      `${config.FOOTER};
 
     if (metadata.preview) {
       await conn.sendMessage(from, {
