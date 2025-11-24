@@ -12,7 +12,7 @@
   "AUTO_REPLY": "true",
   "AUTO_VOICE": "false",
   "AUTO_TYPING": "false",
-  "AUTO_BIO": "true",
+  "AUTO_BIO": "false",
   "AUTO_RECORDING": "false",
   "ALWAYS_ONLINE": "false",
   "ANTI_DELETE": "true",
