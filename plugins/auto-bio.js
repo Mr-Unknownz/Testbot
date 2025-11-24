@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const moment = require("moment-timezone");
 const { cmd } = require("../lib/command");
-const config = require("../settings");
+const config = require("../settings/settings.json");
 
 const lifeQuotes = [
   // English Quotes
