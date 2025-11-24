@@ -1,6 +1,20 @@
 const config = require('../settings/settings.json')
 const { cmd, commands } = require('../lib/command')
 
+// 🟢 Alive plugin එකේ functions ඇඩ් කරලා
+const { 
+    getBuffer, 
+    getGroupAdmins, 
+    getRandom, 
+    h2k, 
+    isUrl, 
+    Json, 
+    runtime, 
+    sleep, 
+    fetchJson, 
+    jsonformat 
+} = require('../lib/functions')
+
 cmd({
     pattern: "unmute",
     alias: ["groupunmute"],
@@ -22,7 +36,7 @@ async (conn, mek, m, { from, isGroup, isAdmins, isBotAdmins, reply, sender }) =>
 
 🔊 𝐄ᴠᴇʀʏᴏɴᴇ 𝐂ᴀɴ 𝐒ᴇɴᴅ 𝐌ᴇꜱꜱᴀɢᴇꜱ 𝐍𝐨𝐰.`;
 
-        // 🧚 Alive-style qMessage
+// 🟣 Same qMessage as ALIVE
         const qMessage = {
             key: {
               fromMe: false,
@@ -41,7 +55,7 @@ END:VCARD`
             }
         };
 
-        // 🔘 Buttons (Alive style)
+// 🔘 Alive-style Buttons
         let buttons = [
             { buttonId: ".mute", buttonText: { displayText: "🔇 𝐌ᴜᴛᴇ 𝐆ʀᴏᴜᴘ" }, type: 1 },
             { buttonId: ".lock", buttonText: { displayText: "🔐 𝐋ᴏᴄᴋ 𝐆ʀᴏᴜᴘ" }, type: 1 }
@@ -68,7 +82,6 @@ END:VCARD`
         )
 
     } catch (e) {
-        console.error("Error in unmute:", e);
-        reply("❌ Failed to unmute the group.");
+        console.error("UNMUTE ERROR:", e);
     }
 });
