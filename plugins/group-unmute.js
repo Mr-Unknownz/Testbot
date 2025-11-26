@@ -1,7 +1,7 @@
 const config = require('../settings/settings.json');
 const { cmd, commands } = require('../lib/command');
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson } = require('../lib/functions');
-const { generateWAMessageFromContent } = require('@adiwajshing/baileys');
+const { generateWAMessageFromContent } = require('@whiskeysockets/baileys');
 
 cmd({
     pattern: "unmute",
