@@ -27,7 +27,7 @@ ANTI_DEL_PATH: process.env.ANTI_DEL_PATH || 'inbox',// same-chat for owner send 
 STATUS_SAVE_PATH: process.env.STATUS_SAVE_PATH || 'inbox',
 OWNER_NAME: process.env.OWNER_NAME || '_Mr Unknown X Luxalgo_',
 OWNER_NUMBER: process.env.OWNER_NUMBER || ['94723975388','94741259325'],
-OWNER_REACT: process.env.OWNER_REACT || 'true',
-OWNER_REACT_EMOJI: process.env.OWNER_REACT_EMOJI || '👨‍💻',
+OWNER_REACT: process.env.OWNER_REACT || 'false',
+OWNER_REACT_EMOJI: process.env.OWNER_REACT_EMOJI || '🖤',
 AUTO_READ_STATUS: process.env.AUTO_READ_STATUS === undefined ?"true" : process.env.AUTO_READ_STATUS
 };
