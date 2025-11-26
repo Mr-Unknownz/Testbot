@@ -19,16 +19,19 @@ cmd({
 
             await conn.groupSettingUpdate(from, "not_announcement");
 
+            const imageUrl = 'https://files.catbox.moe/1szyye.jpg'; // Image URL එක මෙතනට දාන්න
+
             const buttons = [
                 { buttonId: '.mute', buttonText: { displayText: 'Mute' }, type: 1 },
                 { buttonId: '.lock', buttonText: { displayText: 'Lock' }, type: 1 }
             ];
 
             const buttonMessage = {
-                text: "✅ 𝐆ʀᴏᴜᴘ 𝐇ᴀꜱ 𝐁ᴇᴇɴ 𝐔ɴᴍᴜᴛᴇᴅ. 𝐄ᴠᴇʀʏᴏɴᴇ 𝐂ᴀɴ 𝐒ᴇɴᴅ 𝐌ᴇꜱꜱᴀɢᴇꜱ.",
+                image: { url: imageUrl },
+                caption: "✅ 𝐆ʀᴏᴜᴘ 𝐇ᴀꜱ 𝐁ᴇᴇɴ 𝐔ɴᴍᴜᴛᴇᴅ. 𝐄ᴠᴇʀʏᴏɴᴇ 𝐂ᴀɴ 𝐒ᴇɴᴅ 𝐌ᴇꜱꜱᴀɢᴇꜱ.",
                 footer: 'ASHIYA-AI',
                 buttons: buttons,
-                headerType: 1
+                headerType: 4 // HeaderType එක 4 විදියට සෙට් කරන්න
             };
 
             const sendMsg = await conn.sendMessage(
