@@ -1,5 +1,5 @@
 {
-  "SESSION_ID": "QJUSMY=CtwijA7a#g9m2b8gAgnNAFbBSU_eehFPaDJnX5qmxmD2RBpwPgsk",
+  "SESSION_ID": "QJUSMY=e94VGIZS#hPHx5CSI160v9HkB3IswhQH7PbeuBFDKdeV43BgWSM4",
   "MONGODB": "mongodb://mongo:hSKOyytRSHAikyAFUajcmkoJTEcgoBTR@trolley.proxy.rlwy.net:29757",
   "PREFIX": ".",
   "ALIVE_IMG": "https://files.catbox.moe/xo1wiq.png",
@@ -25,6 +25,6 @@
     "94741259325"
   ],
   "OWNER_REACT": "false",
-  "OWNER_REACT_EMOJI": "🖤",
+  "OWNER_REACT_EMOJI": "👨‍💻",
   "AUTO_READ_STATUS": "true"
 }
