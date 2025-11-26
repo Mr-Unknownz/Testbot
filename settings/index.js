@@ -26,9 +26,7 @@ const ALLOWED = [
   'ANTI_VV',
   'ANTI_DEL_PATH',
   'STATUS_SAVE_PATH',
-  'AUTO_READ_STATUS',
-  'OWNER_REACT',
-  'OWNER_REACT_EMOJI'
+  'AUTO_READ_STATUS'
 ];
 
 // helper to coerce booleans from strings (preserve previous behavior)
