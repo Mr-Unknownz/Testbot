@@ -18,6 +18,7 @@ const ALLOWED = [
   'AUTO_REPLY',
   'AUTO_VOICE',
   'AUTO_TYPING',
+  'AUTO_STICKER',
   'AUTO_BIO',
   'AUTO_RECORDING',
   'ALWAYS_ONLINE',
@@ -25,7 +26,9 @@ const ALLOWED = [
   'ANTI_VV',
   'ANTI_DEL_PATH',
   'STATUS_SAVE_PATH',
-  'AUTO_READ_STATUS'
+  'AUTO_READ_STATUS',
+  'OWNER_REACT',
+  'OWNER_REACT_EMOJI'
 ];
 
 // helper to coerce booleans from strings (preserve previous behavior)
