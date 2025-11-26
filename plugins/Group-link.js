@@ -1,5 +1,5 @@
 const { cmd, commands } = require('../lib/command')
-const config = require('..settings/settings.json')
+const config = require('../settings/settings.json')
 const prefix = config.PREFIX
 const fs = require('fs')
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, sleep, fetchJson } = require('../lib/functions')
