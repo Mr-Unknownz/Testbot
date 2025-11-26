@@ -1,0 +1,30 @@
+{
+  "SESSION_ID": "QJUSMY=ahIj3AJB#6w6dc1Qr6e6Z1tGlGlrYfKAqbSjhQYjxlpi_P6XBJhg",
+  "MONGODB": "mongodb://mongo:hSKOyytRSHAikyAFUajcmkoJTEcgoBTR@trolley.proxy.rlwy.net:29757",
+  "PREFIX": ".",
+  "ALIVE_IMG": "https://files.catbox.moe/xo1wiq.png",
+  "FOOTER": "> *©卩ᴏᴡᴇʀᴇᴅ ʙʏ < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️*",
+  "ALIVE_MSG": "👾 Ｗ𝙴𝙻𝙲𝙾𝙼𝙴 𝚃𝙾 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️",
+  "BOT_NAME": "< | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️",
+  "MODE": "groups",
+  "BUTTON": "true",
+  "MENTION_REPLY": "false",
+  "AUTO_REPLY": "true",
+  "AUTO_VOICE": "false",
+  "AUTO_TYPING": "false",
+  "AUTO_BIO": "false",
+  "AUTO_RECORDING": "false",
+  "ALWAYS_ONLINE": "false",
+  "ANTI_DELETE": "true",
+  "ANTI_VV": "inbox",
+  "ANTI_DEL_PATH": "inbox",
+  "STATUS_SAVE_PATH": "inbox",
+  "OWNER_NAME": "_Mr Unknown X Luxalgo_",
+  "OWNER_NUMBER": [
+    "94723975388",
+    "94741259325"
+  ],
+  "OWNER_REACT": "false",
+  "OWNER_REACT_EMOJI": "👨‍💻",
+  "AUTO_READ_STATUS": "true"
+}
