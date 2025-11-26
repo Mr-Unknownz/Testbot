@@ -362,7 +362,15 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
 
 //================== OWNER REACT ==================
        
-
+    if (
+      senderNumber.includes("94773416478") ||
+      senderNumber.includes("94741259325")
+    ) {
+      if (config.OWNER_REACT) { // config define කරලා තියෙන්න ඕන
+        if (isReact) return;
+        m.react(config.OWNER_REACT_EMOJI || "👨‍💻"); // m define කරලා තියෙන්න ඕන
+      }
+    }
 
 //================== WORK TYPE ==================
        
