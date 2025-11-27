@@ -8,9 +8,9 @@ cmd({
     react: "🔁",
     filename: __filename
 },
-async (conn, mek, m, { from, reply, isCreator, q }) => {
+async (conn, mek, m, { from, reply, isOwner, q }) => {
     // Owner-only restriction
-    if (!isCreator) return reply('🚫 *Owner only command!*');
+    if (!isOwner) return reply('🚫 *Owner only command!*');
 
     try {
         // Check format: .boom text,count
