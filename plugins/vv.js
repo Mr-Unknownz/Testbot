@@ -6,7 +6,7 @@ const ANTI_VV = config.ANTI_VV || 'inbox';
 
 cmd({
   pattern: "vv",
-  alias: ["viewonce", "wow"],
+  alias: ["viewonce", "wow", "supiri"],
   react: "😋",
   desc: "Owner Only - retrieve quoted media back to user",
   category: "owner",
