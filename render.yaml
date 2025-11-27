@@ -1,0 +1,19 @@
+# render.yaml - Render Managed Deployment for Node.js Bot
+
+services:
+  - type: web
+    name: Testbot
+    env: node
+    plan: free      # change plan if you want
+    branch: main
+    repo: https://github.com/vijitharanawakage/Testbot.git
+    buildCommand: npm install --legacy-peer-deps
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    disk:
+      name: bot-data
+      path: /app
+      sizeGB: 1
+    autoDeploy: true
