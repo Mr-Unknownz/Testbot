@@ -15,7 +15,7 @@
   "AUTO_BIO": "false",
   "AUTO_RECORDING": "false",
   "ALWAYS_ONLINE": "false",
-  "ANTI_DELETE": "false",
+  "ANTI_DELETE": "true",
   "ANTI_VV": "inbox",
   "ANTI_DEL_PATH": "inbox",
   "STATUS_SAVE_PATH": "inbox",
