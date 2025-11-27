@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const config = require('../settings')
+const config = require('../settings/settings.js')
 const {cmd , commands} = require('../lib/command')
 
 //auto reply 
