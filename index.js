@@ -148,8 +148,60 @@ conn.groupAcceptInvite(inviteCode); 
             console.log(' Bot connected ✅')
   
   // bot connected notification without admin variable
-conn.sendMessage("94741259325@s.whatsapp.net", { text: "*┏╸╸╸╸╸╸╸╸╸⚃* *CURRENT SETTINGS* *⚃* \n\n*♾️ AUTO_READ_STATUS:* ➠ " + config.AUTO_READ_STATUS + " \n*♾️ MODE:* ➠ " + config.MODE + " \n*♾️ BOT_NAME:* ➠ " + config.BOT_NAME + " \n*♾️ AUTO_VOICE:* ➠ " + config.AUTO_VOICE + " \n*♾️ AUTO_REPLY:* ➠ " + config.AUTO_REPLY + " \n*♾️ ALIVE_IMG:* ➠ " + config.ALIVE_IMG + " \n*♾️ ALIVE_MSG:* ➠ " + config.ALIVE_MSG + " \n*♾️ PREFIX:* ➠ [" + config.PREFIX + "] \n*♾️ AUTO_RECORDING:* ➠ " + config.AUTO_RECORDING + " \n*♾️ AUTO_TYPING:* ➠ " + config.AUTO_TYPING + " \n*┗╸╸╸╸╸╸╸╸╸⚃*\n\n```Queen Jusmy Md Started.Command Now...✅```" });
-conn.sendMessage("94761068032@s.whatsapp.net", { text: "*┏╸╸╸╸╸╸╸╸╸⚃* *CURRENT SETTINGS* *⚃* \n\n*♾️ AUTO_READ_STATUS:* ➠ " + config.AUTO_READ_STATUS + " \n*♾️ MODE:* ➠ " + config.MODE + " \n*♾️ BOT_NAME:* ➠ " + config.BOT_NAME + " \n*♾️ AUTO_VOICE:* ➠ " + config.AUTO_VOICE + " \n*♾️ AUTO_REPLY:* ➠ " + config.AUTO_REPLY + " \n*♾️ ALIVE_IMG:* ➠ " + config.ALIVE_IMG + " \n*♾️ ALIVE_MSG:* ➠ " + config.ALIVE_MSG + " \n*♾️ PREFIX:* ➠ [" + config.PREFIX + "] \n*♾️ AUTO_RECORDING:* ➠ " + config.AUTO_RECORDING + " \n*♾️ AUTO_TYPING:* ➠ " + config.AUTO_TYPING + " \n*┗╸╸╸╸╸╸╸╸╸⚃*\n\n```Queen Jusmy Md Started.Command Now...✅```" });
+conn.sendMessage("94741259325@s.whatsapp.net", { text: `*╭───「 🔧 𝙱𝙾𝚃 𝙲𝚄𝚁𝚁𝙴𝙽𝚃 𝚂𝙴𝚃𝚃𝙸𝙽𝙶𝚂 」*
+*│• ᴘʀᴇꜰɪx:* [${config.PREFIX}]
+*│• ᴀʟɪᴠᴇ_ɪᴍɢ:* ${config.ALIVE_IMG}
+*│• ꜰᴏᴏᴛᴇʀ:* ${config.FOOTER}
+*│• ᴀʟɪᴠᴇ_ᴍꜱɢ:* ${config.ALIVE_MSG}
+*│• ʙᴏᴛ_ɴᴀᴍᴇ:* ${config.BOT_NAME}
+*│• ᴍᴏᴅᴇ:* ${config.MODE}
+*│• ʙᴜᴛᴛᴏɴ:* ${config.BUTTON}
+*│• ᴍᴇɴᴛɪᴏɴ_ʀᴇᴘʟʏ:* ${config.MENTION_REPLY}
+*│• ᴀᴜᴛᴏ_ʀᴇᴘʟʏ:* ${config.AUTO_REPLY}
+*│• ᴀᴜᴛᴏ_ᴠᴏɪᴄᴇ:* ${config.AUTO_VOICE}
+*│• ᴀᴜᴛᴏ_ᴛʏᴘɪɴɢ:* ${config.AUTO_TYPING}
+*│• ᴀᴜᴛᴏ_ꜱᴛɪᴄᴋᴇʀ:* ${config.AUTO_STICKER}
+*│• ᴀᴜᴛᴏ_ʙɪᴏ:* ${config.AUTO_BIO}
+*│• ᴀᴜᴛᴏ_ʀᴇᴄᴏʀᴅɪɴɢ:* ${config.AUTO_RECORDING}
+*│• ᴀʟᴡᴀʏꜱ_ᴏɴʟɪɴᴇ:* ${config.ALWAYS_ONLINE}
+*│• ᴀɴᴛɪ_ᴅᴇʟᴇᴛᴇ:* ${config.ANTI_DELETE}
+*│• ᴀɴᴛɪ_ᴠᴠ:* ${config.ANTI_VV}
+*│• ᴀɴᴛɪ_ᴅᴇʟ_ᴘᴀᴛʜ:* ${config.ANTI_DEL_PATH}
+*│• ꜱᴛᴀᴛᴜꜱ_ꜱᴀᴠᴇ_ᴘᴀᴛʜ:* ${config.STATUS_SAVE_PATH}
+*│• ᴏᴡɴᴇʀ_ɴᴀᴍᴇ:* ${config.OWNER_NAME}
+*│• ᴏᴡɴᴇʀ_ɴᴜᴍʙᴇʀ:* ${config.OWNER_NUMBER}
+*│• ᴏᴡɴᴇʀ_ʀᴇᴀᴄᴛ:* ${config.OWNER_REACT}
+*│• ᴀᴜᴛᴏ_ʀᴇᴀᴅ_ꜱᴛᴀᴛᴜꜱ:* ${config.AUTO_READ_STATUS}
+*╰───────────────────●●►*\n\n\`\`\`
+Queen Jusmy Md Started.Command Now 🚀
+\`\`\`` });
+conn.sendMessage("94761068032@s.whatsapp.net", { text: `*╭───「 🔧 𝙱𝙾𝚃 𝙲𝚄𝚁𝚁𝙴𝙽𝚃 𝚂𝙴𝚃𝚃𝙸𝙽𝙶𝚂 」*
+*│• ᴘʀᴇꜰɪx:* [${config.PREFIX}]
+*│• ᴀʟɪᴠᴇ_ɪᴍɢ:* ${config.ALIVE_IMG}
+*│• ꜰᴏᴏᴛᴇʀ:* ${config.FOOTER}
+*│• ᴀʟɪᴠᴇ_ᴍꜱɢ:* ${config.ALIVE_MSG}
+*│• ʙᴏᴛ_ɴᴀᴍᴇ:* ${config.BOT_NAME}
+*│• ᴍᴏᴅᴇ:* ${config.MODE}
+*│• ʙᴜᴛᴛᴏɴ:* ${config.BUTTON}
+*│• ᴍᴇɴᴛɪᴏɴ_ʀᴇᴘʟʏ:* ${config.MENTION_REPLY}
+*│• ᴀᴜᴛᴏ_ʀᴇᴘʟʏ:* ${config.AUTO_REPLY}
+*│• ᴀᴜᴛᴏ_ᴠᴏɪᴄᴇ:* ${config.AUTO_VOICE}
+*│• ᴀᴜᴛᴏ_ᴛʏᴘɪɴɢ:* ${config.AUTO_TYPING}
+*│• ᴀᴜᴛᴏ_ꜱᴛɪᴄᴋᴇʀ:* ${config.AUTO_STICKER}
+*│• ᴀᴜᴛᴏ_ʙɪᴏ:* ${config.AUTO_BIO}
+*│• ᴀᴜᴛᴏ_ʀᴇᴄᴏʀᴅɪɴɢ:* ${config.AUTO_RECORDING}
+*│• ᴀʟᴡᴀʏꜱ_ᴏɴʟɪɴᴇ:* ${config.ALWAYS_ONLINE}
+*│• ᴀɴᴛɪ_ᴅᴇʟᴇᴛᴇ:* ${config.ANTI_DELETE}
+*│• ᴀɴᴛɪ_ᴠᴠ:* ${config.ANTI_VV}
+*│• ᴀɴᴛɪ_ᴅᴇʟ_ᴘᴀᴛʜ:* ${config.ANTI_DEL_PATH}
+*│• ꜱᴛᴀᴛᴜꜱ_ꜱᴀᴠᴇ_ᴘᴀᴛʜ:* ${config.STATUS_SAVE_PATH}
+*│• ᴏᴡɴᴇʀ_ɴᴀᴍᴇ:* ${config.OWNER_NAME}
+*│• ᴏᴡɴᴇʀ_ɴᴜᴍʙᴇʀ:* ${config.OWNER_NUMBER}
+*│• ᴏᴡɴᴇʀ_ʀᴇᴀᴄᴛ:* ${config.OWNER_REACT}
+*│• ᴀᴜᴛᴏ_ʀᴇᴀᴅ_ꜱᴛᴀᴛᴜꜱ:* ${config.AUTO_READ_STATUS}
+*╰───────────────────●●►*\n\n\`\`\`
+Queen Jusmy Md Started.Command Now 🚀
+\`\`\`` });
 //================== CONNECT MG ==================
 
 let up = `> Connected Successfully 🩷🎀\n\n╭───❍「 *✅CONNECTED BOT* 」\n┃ _QUEEN JUSMY MD_\n╰───────────❍\n╭───❍「 *🌐BOT WEB PAGE* 」\n┃ Comming Soon😐👊\n╰───────────❍\n╭───❍「 *🫳JOIN CHANNEL* 」\n┃ https://whatsapp.com/channel/0029Vb5saAU4Y9lfzhgBmS2N\n╰───────────❍\n╭───❍「 *👤BOT OWNERS* 」\n┃ _Mr.Sandesh Bhashana_\n┃ _Mr.Pathum Malsara_\n╰───────────❍\n╭───❍「 *📈SYSTEM STATUS* 」\n┃ ░░░░░░░░░░░░░░░░░░░ 100%\n╰───────────❍\n╭───❍「 *📍BOT PREFIX* 」\n┃ _Configure Your Prefix_ [ ${prefix} ]\n╰───────────❍\n╭───❍「 *⚙️AUTOMATION BY* 」\n┃ *QUEEN-JUSMY-CREW 🧚*\n╰───────────❍`;
