@@ -1,76 +1,79 @@
-// plugins/antidelete.js
-const { downloadContentFromMessage } = require("@whiskeysockets/baileys");
-const config = require("../settings/settings.json");
+const { cmd } = require('../lib/command')
+const { downloadContentFromMessage } = require('@whiskeysockets/baileys')
 
-let cache = new Map();
-const MAX_CACHE = 3000;
-const makeKey = (key) => `${key.remoteJid}|${key.id}`;
+let cache = new Map()
+const MAX_CACHE = 2000
 
-const startAntiDelete = (conn) => {
-  if (!config.ANTI_DELETE) return console.log("❌ Anti-Delete is disabled in config.");
+const keyId = (k) => `${k.remoteJid}|${k.id}`
 
-  // Cache incoming messages
-  conn.ev.on('messages.upsert', async ({ messages }) => {
-    for (let msg of messages) {
-      if (!msg.message) continue;
-      const key = makeKey(msg.key);
-      cache.set(key, {
-        key: msg.key,
-        message: msg.message,
-        participant: msg.key.participant || msg.pushName || "Unknown"
-      });
-      if (cache.size > MAX_CACHE) cache.delete(cache.keys().next().value);
-    }
-  });
+// 🔥 Start caching messages globally
+module.exports = (conn) => {
 
-  // Restore deleted messages
-  conn.ev.on('messages.delete', async (deleted) => {
-    const restore = async (del) => {
-      try {
-        const key = makeKey(del.key);
-        const saved = cache.get(key);
-        if (!saved) return;
+    conn.ev.on('messages.upsert', async ({ messages }) => {
+        for (let msg of messages) {
+            if (!msg.message) continue
+            cache.set(keyId(msg.key), {
+                key: msg.key,
+                message: msg.message,
+                sender: msg.pushName || msg.key.participant || "Unknown"
+            })
 
-        const jid = del.key.remoteJid;
-        const msg = saved.message;
-        const sender = saved.participant?.split("@")[0] || "unknown";
+            if (cache.size > MAX_CACHE) {
+                cache.delete(cache.keys().next().value)
+            }
+        }
+    })
 
-        await conn.sendMessage(jid, {
-          text: `🛡️ *Anti-Delete Active*\n\n👤 Deleted by: @${sender}\n\n📩 Restoring message...`,
-          mentions: [saved.participant]
-        });
+    conn.ev.on('messages.delete', async (deleted) => {
 
-        let type = msg.imageMessage
-          ? "image"
-          : msg.videoMessage
-            ? "video"
-            : msg.audioMessage
-              ? "audio"
-              : msg.documentMessage
-                ? "document"
-                : msg.stickerMessage
-                  ? "sticker"
-                  : null;
-        if (!type) return;
+        async function restore(del) {
+            const saved = cache.get(keyId(del.key))
+            if (!saved) return
 
-        const stream = await downloadContentFromMessage(msg[type + "Message"] ? msg[type + "Message"] : msg, type);
-        let buffer = Buffer.from([]);
-        for await (const chunk of stream) buffer = Buffer.concat([buffer, chunk]);
+            const jid = del.key.remoteJid
+            const msg = saved.message
 
-        await conn.sendMessage(jid, { [type]: buffer, caption: "🛡️ Restored (Anti-Delete)" });
-      } catch (err) {
-        console.log("AntiDelete Error:", err);
-      }
-    };
+            await conn.sendMessage(jid, {
+                text: `🛡️ *Anti-Delete Triggered*\n👤 Deleted by: @${saved.sender}\n\n📨 Restoring...`,
+                mentions: [del.key.participant]
+            })
 
-    if (Array.isArray(deleted)) {
-      for (const d of deleted) await restore(d);
-    } else {
-      await restore(deleted);
-    }
-  });
+            // TEXT
+            if (msg.conversation || msg?.extendedTextMessage?.text) {
+                return conn.sendMessage(jid, {
+                    text: msg.conversation || msg.extendedTextMessage.text
+                })
+            }
 
-  console.log("✅ Anti-Delete is active!");
-};
+            // MEDIA
+            let type =
+                msg.imageMessage ? "image" :
+                msg.videoMessage ? "video" :
+                msg.audioMessage ? "audio" :
+                msg.documentMessage ? "document" :
+                msg.stickerMessage ? "sticker" :
+                null
 
-module.exports = { startAntiDelete };
+            if (!type) return
+
+            const stream = await downloadContentFromMessage(msg[type + "Message"], type)
+            let buffer = Buffer.from([])
+            for await (const chunk of stream) {
+                buffer = Buffer.concat([buffer, chunk])
+            }
+
+            await conn.sendMessage(jid, {
+                [type]: buffer,
+                caption: "🛡 Restored Message"
+            })
+        }
+
+        if (Array.isArray(deleted)) {
+            for (let d of deleted) await restore(d)
+        } else {
+            await restore(deleted)
+        }
+    })
+
+    console.log("🛡 Anti-Delete GLOBAL Listener Loaded")
+}
