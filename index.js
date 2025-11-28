@@ -233,6 +233,10 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
 
  //=============ANTI-DELETE DETECT=================
 
+const { startAntiDelete } = require("./plugins/antidelete");
+
+startAntiDelete(conn);
+							  
   conn.ev.on('messages.update', async updates => {
     for (const update of updates) {
       if (update.update.message === null) {
