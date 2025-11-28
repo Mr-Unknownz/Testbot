@@ -235,16 +235,11 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
 
 const { startAntiDelete } = require("./plugins/antidel");
 
-startAntiDelete(conn);
-							  
-  conn.ev.on('messages.update', async updates => {
-    for (const update of updates) {
-      if (update.update.message === null) {
-        console.log("Delete Detected:", JSON.stringify(update, null, 2));
-        await AntiDelete(conn, updates);
-      }
-    }
-  });
+conn.ev.on("connection.update", (update) => {
+  if (update.connection === "open" && config.ANTI_DELETE.toLowerCase() === "true") {
+    startAntiDelete(conn);
+  }
+});
   //============================== 
 
 const { startAutoBio } = require("./plugins/auto-bio");
