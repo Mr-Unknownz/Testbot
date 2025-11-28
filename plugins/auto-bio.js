@@ -62,7 +62,7 @@ const updateBio = async (conn) => {
   try {
     const currentTime = moment().tz("Asia/Colombo").format("HH:mm:ss");
     const quote = lifeQuotes[Math.floor(Math.random() * lifeQuotes.length)];
-    const newStatus = `✨📸 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️ 𝐈𝐬 𝐀ᴄᴛɪᴠᴇ 🟢 | ⏰ ${currentTime} 🇱🇰\n💬 ${quote}`;
+    const newStatus = `✨📸 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐈𝐬 𝐀ᴄᴛɪᴠᴇ 🟢 | ⏰ ${currentTime} 🇱🇰\n💬 ${quote}`;
     await conn.updateProfileStatus(newStatus);
     console.log("✅ Bio updated:", newStatus);
   } catch (err) {
