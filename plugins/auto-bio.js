@@ -60,7 +60,7 @@ const saveStatus = (status) => fs.writeFileSync(jsonPath, JSON.stringify(status,
 
 const updateBio = async (conn) => {
   try {
-    const currentTime = moment().tz("Asia/Colombo").format("HH:mm:ss");
+    const currentTime = moment().tz("Asia/Colombo").format("HH:mm");
     const quote = lifeQuotes[Math.floor(Math.random() * lifeQuotes.length)];
     const newStatus = `✨📸 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐈𝐬 𝐀ᴄᴛɪᴠᴇ 🟢 | ⏰ ${currentTime} 🇱🇰\n💬 ${quote}`;
     await conn.updateProfileStatus(newStatus);
