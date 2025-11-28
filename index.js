@@ -143,11 +143,15 @@ conn.groupAcceptInvite(inviteCode); 
                     require("./plugins/" + plugin);
                 }
             });
-			if (config.ANTI_DELETE.toLowerCase() === "true") {
-            const { startAntiDelete } = require("./plugins/antidel");
-            startAntiDelete(conn);
-            console.log("🛡️ Anti-Delete Started!");
-			}
+			// Load Anti Delete (GLOBAL EVENT)
+try {
+    const runAntiDelete = require("./plugins/antidel")
+    runAntiDelete(conn)
+    console.log("🛡 Anti-Delete Loaded Successfully!")
+} catch (e) {
+    console.log("❌ Anti-Delete Load Error:", e)
+}
+
             console.log('QUEEN-JUSMY-MD Plugins Installed 📂')
             console.log(' Bot connected ✅')
   
