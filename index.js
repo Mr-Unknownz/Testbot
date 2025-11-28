@@ -143,6 +143,11 @@ conn.groupAcceptInvite(inviteCode); 
                     require("./plugins/" + plugin);
                 }
             });
+			if (config.ANTI_DELETE.toLowerCase() === "true") {
+            const { startAntiDelete } = require("./plugins/antidel");
+            startAntiDelete(conn);
+            console.log("🛡️ Anti-Delete Started!");
+			}
             console.log('QUEEN-JUSMY-MD Plugins Installed 📂')
             console.log(' Bot connected ✅')
   
@@ -232,13 +237,6 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
 
  //=============ANTI-DELETE DETECT=================
 
-const { startAntiDelete } = require("./plugins/antidel");
-
-conn.ev.on("connection.update", (update) => {
-  if (update.connection === "open" && config.ANTI_DELETE.toLowerCase() === "true") {
-    startAntiDelete(conn);
-  }
-});
   //============================== 
 
 const { startAutoBio } = require("./plugins/auto-bio");
