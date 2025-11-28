@@ -233,7 +233,7 @@ conn.sendMessage(conn.user.id,{ text: up, contextInfo: {
 
  //=============ANTI-DELETE DETECT=================
 
-const { startAntiDelete } = require("./plugins/antidelete");
+const { startAntiDelete } = require("./plugins/antidel");
 
 startAntiDelete(conn);
 							  
