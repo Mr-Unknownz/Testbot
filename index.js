@@ -143,7 +143,7 @@ conn.groupAcceptInvite(inviteCode); 
                     require("./plugins/" + plugin);
                 }
             });
-
+            initAntiDelete(conn);
             console.log('QUEEN-JUSMY-MD Plugins Installed 📂')
             console.log(' Bot connected ✅')
   
