@@ -8,7 +8,7 @@
   "BOT_NAME": "< | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️",
   "MODE": "groups",
   "BUTTON": "true",
-  "MENTION_REPLY": "false",
+  "MENTION_REPLY": "true",
   "AUTO_REPLY": "false",
   "AUTO_VOICE": "false",
   "AUTO_TYPING": "false",
