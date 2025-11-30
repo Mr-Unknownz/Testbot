@@ -1,7 +1,7 @@
 const axios = require("axios");
 const cheerio = require('cheerio');
 const { cmd, commands } = require('../lib/command')
-const config = require('../settings/,settings.json');
+const config = require('../settings/settings.json');
 const {fetchJson} = require('../lib/functions');
 
 const api = `https://nethu-api-ashy.vercel.app`;
