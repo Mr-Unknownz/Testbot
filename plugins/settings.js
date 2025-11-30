@@ -30,9 +30,9 @@ cmd({
       } else if (['ANTI_VV','ANTI_DEL_PATH','STATUS_SAVE_PATH'].includes(k)) {
         choices = 'Choices: inbox / same-chat';
         } else if (['MODE'].includes(k)) {
-        choices = 'Choices: inbox / public / private';
+        choices = 'Choices: inbox / groups / private';
       } else {
-        choices = 'Choices: ❲ᴜꜱᴇ .ꜱᴇᴛ ᴄᴏᴍᴍᴀɴᴅ ꜰᴏʀ ᴄʜᴀɴɢᴇ ꜱᴛʀɪɴɢ ꜱᴇᴛᴛɪɴɢꜱ ᴏʀ ᴄʜᴏᴏꜱᴇ ᴛʜɪꜱ ❕❳';
+        choices = 'Choices: ❲use set cmd❳';
       }
       out += `    ${choices}\n\n`;
 
@@ -54,13 +54,13 @@ cmd({
     // Build sections as one section with rows
     const sections = [
       {
-        title: "👇 ꜱᴇʟᴇᴄᴛ ᴀ ꜱᴇᴛᴛɪɴɢ ᴛᴏ ᴄʜᴀɴɢᴇ. 👇",
+        title: "👇 ꜱᴇʟᴇᴄᴛ ᴀ ꜱᴇᴛᴛɪɴɢ ᴛᴏ ᴄʜᴀɴɢᴇ.",
         rows: items
       }
     ];
 
     const listMessage = {
-      text: "👇 𝐒ᴇʟᴇᴄᴛ 𝐀 𝐒ᴇᴛᴛɪɴɢ 𝐓ᴏ 𝐂ʜᴀɴɢᴇ. 👇",
+      text: "👇 𝐒ᴇʟᴇᴄᴛ 𝐀 𝐒ᴇᴛᴛɪɴɢ 𝐓ᴏ 𝐂ʜᴀɴɢᴇ.",
       footer: "© ᴘᴏᴡᴇʀᴇᴅ ʙʏ Qᴜᴇᴇɴ ᴊᴜꜱᴍʏ 🧚",
       buttonText: "❭❭ 𝙲𝙷𝙾𝙾𝚂𝙴 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
       sections
