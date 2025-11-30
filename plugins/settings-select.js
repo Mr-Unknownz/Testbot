@@ -10,7 +10,8 @@ cmd({
   category: "internal",
   react: null,
   filename: __filename
-}, async (conn, mek, m, { from, prefix, l, quoted, body, isCmd, args, q, isGroup, sender, senderNumber, reply }) => {
+}, async (conn, mek, m, { from, prefix, l, quoted, body, isCmd, args, q, isGroup, sender, senderNumber, reply, isOwner }) => {
+  if (!isOwner) return reply('> *🚫 *Queen Jusmy Settings Change Is Owner only command...!*');
   try {
     const plain = (body || '').trim();
     if (!plain) return;
@@ -22,39 +23,45 @@ cmd({
     // Expire if older than 5 minutes
     if (Date.now() - (state.timestamp || 0) > 5 * 60 * 1000) {
       await selectionStore.clearPending(senderNumber);
-      return reply('⏱️ Selection timed out. Run .settings again to change settings.');
+      return reply('> *⏱️ Selection timed out. Run .settings again to change settings.*');
     }
 
     // Case 1: User replied with a number -> pick the setting
     if (/^\d+$/.test(plain)) {
       const idx = parseInt(plain, 10) - 1;
       if (idx < 0 || idx >= state.allowed.length) {
-        return reply('❌ Invalid number. Please reply with a number from the list shown in .settings.');
+        return reply('> *❌ Invalid number. Please reply with a number from the list shown in .settings.*');
       }
       const key = state.allowed[idx];
       // prepare options depending on key type
       let options = [];
       if (['AUTO_BIO','AUTO_REPLY','AUTO_VOICE','AUTO_TYPING','AUTO_STICKER','AUTO_RECORDING','ALWAYS_ONLINE','OWNER_REACT','AUTO_READ_STATUS','BUTTON','MENTION_REPLY','ANTI_DELETE'].includes(key)) {
         options = [
-          { id: `settings_apply|${key}|true`, title: 'true', description: 'Enable' },
-          { id: `settings_apply|${key}|false`, title: 'false', description: 'Disable' }
+          { id: `settings_apply|${key}|true`, title: '𝚃𝚁𝚄𝙴', description: '✅ ᴇɴᴀʙʟᴇ' },
+          { id: `settings_apply|${key}|false`, title: '𝙵𝙰𝙻𝚂𝙴', description: '❌ ᴅɪꜱᴀʙʟᴇ' }
         ];
       } else if (['ANTI_VV','ANTI_DEL_PATH','STATUS_SAVE_PATH'].includes(key)) {
         options = [
-          { id: `settings_apply|${key}|inbox`, title: 'inbox', description: 'Send to bot inbox' },
-          { id: `settings_apply|${key}|same-chat`, title: 'same-chat', description: 'Send to same chat' }
+          { id: `settings_apply|${key}|inbox`, title: '𝙸𝙽𝙱𝙾𝚇', description: '🗣️ꜱᴇɴᴅ ᴛᴏ ʙᴏᴛ ɪɴʙᴏx' },
+          { id: `settings_apply|${key}|same-chat`, title: '𝚂𝙰𝙼𝙴-𝙲𝙷𝙰𝚃', description: '📄 ꜱᴇɴᴅ ᴛᴏ ꜱᴀᴍᴇ ᴄʜᴀᴛ' }
+        ];
+        } else if (['MODE'].includes(key)) {
+        options = [
+          { id: `settings_apply|${key}|inbox`, title: '𝙸𝙽𝙱𝙾𝚇', description: '🗣️ ᴏɴʟʏ ɪɴʙᴏx ᴡᴏʀᴋɪɴɢ' },
+          { id: `settings_apply|${key}|private`, title: '𝙿𝚁𝙸𝚅𝙰𝚃𝙴', description: '🖥️ ᴏɴʟʏ ꜰᴏʀ ʏᴏᴜ' },
+          { id: `settings_apply|${key}|groups`, title: '𝙶𝚁𝙾𝚄𝙿𝚂', description: '👥 ᴀʟʟ ᴡᴏʀᴋɪɴɢ' }
         ];
       } else {
         // For other keys, fallback: instruct to use .set command
         await selectionStore.clearPending(senderNumber);
-        return reply(`🔧 *${key}* cannot be changed via interactive menu.\nPlease use the text command:\n.set ${key} <value>`);
+        return reply(`> 🔧 *${key}* 𝐂ᴀɴ'ᴛ 𝐁ᴇ 𝐂ʜᴀɴɢᴇᴅ 𝐕ɪᴀ 𝐈ɴᴛᴇʀᴀᴄᴛɪᴠᴇ 𝐌ᴇɴᴜ. 𝐔ꜱᴇ ▸ ❲ .set ${key} <value> ❳`);
       }
 
       // send list of choices (as quick reply list)
-      const sections = [{ title: `Change ${key}`, rows: options.map(o => ({ title: o.title, rowId: o.id, description: o.description })) }];
+      const sections = [{ title: `𝐂ʜᴀɴɢᴇ ${key}`, rows: options.map(o => ({ title: o.title, rowId: o.id, description: o.description })) }];
       await conn.sendMessage(from, {
-        text: `Choose new value for *${key}*`,
-        footer: `Current: ${ (await settingsDb.get(key)) || '—' }`,
+        text: `𝐂ʜᴏᴏꜱᴇ 𝐍ᴇᴡ 𝐕ᴀʟᴜᴇ 𝐅ᴏʀ ❬❬ *${key}* ❭❭`,
+        footer: `💬 ᴄᴜʀʀᴇɴᴛ ▸ ${ (await settingsDb.get(key)) || '—' }`,
         buttonText: 'Select value',
         sections
       }, { quoted: mek });
@@ -71,13 +78,13 @@ cmd({
 
     // Case 2: User replied with a direct value (true/false/inbox/same-chat) as plain text
     const low = plain.toLowerCase();
-    if (['true','false','inbox','same-chat'].includes(low) && state.mode === 'choose_setting') {
+    if (['true','false','inbox','same-chat','private','groups'].includes(low) && state.mode === 'choose_setting') {
       // they replied value without selecting setting -> invalid, ask to pick setting first
-      return reply('❗ Please first select which setting to change (reply with number or use the list from .settings).');
+      return reply('> *❗ Please first select which setting to change (reply with number or use the list from .settings).*');
     }
 
     // If state.mode == 'choose_value' and user replies with value directly
-    if (state.mode === 'choose_value' && ['true','false','inbox','same-chat'].includes(low)) {
+    if (state.mode === 'choose_value' && ['true','false','inbox','same-chat','private','groups'].includes(low)) {
       const key = state.key;
       const value = low;
       // apply
@@ -85,7 +92,7 @@ cmd({
       const newcfg = await settingsDb.updb();
       global.config = newcfg;
       await selectionStore.clearPending(senderNumber);
-      return reply(`✅ Updated *${key}* → *${value}* (applied live).`);
+      return reply(`> _✅ 𝚄𝙿𝙳𝙰𝚃𝙴𝙳 𝚂𝙴𝚃𝚃𝙸𝙽𝙶_ ▸ *${key}* ➜ *${value}*`);
     }
 
     // If message is a list selection (listResponseMessage or buttons) — in main index.js body resolves selected id into body variable already.
@@ -98,22 +105,28 @@ cmd({
       let options = [];
       if (['AUTO_BIO','AUTO_REPLY','AUTO_VOICE','AUTO_TYPING','AUTO_STICKER','AUTO_RECORDING','ALWAYS_ONLINE','OWNER_REACT','AUTO_READ_STATUS','BUTTON','MENTION_REPLY','ANTI_DELETE'].includes(key)) {
         options = [
-          { id: `settings_apply|${key}|true`, title: 'true', description: 'Enable' },
-          { id: `settings_apply|${key}|false`, title: 'false', description: 'Disable' }
+          { id: `settings_apply|${key}|true`, title: '𝚃𝚁𝚄𝙴', description: '✅ ᴇɴᴀʙʟᴇ' },
+          { id: `settings_apply|${key}|false`, title: '𝙵𝙰𝙻𝚂𝙴', description: '❌ ᴅɪꜱᴀʙʟᴇ' }
         ];
       } else if (['ANTI_VV','ANTI_DEL_PATH','STATUS_SAVE_PATH'].includes(key)) {
         options = [
-          { id: `settings_apply|${key}|inbox`, title: 'inbox', description: 'Send to bot inbox' },
-          { id: `settings_apply|${key}|same-chat`, title: 'same-chat', description: 'Send to same chat' }
+          { id: `settings_apply|${key}|inbox`, title: '𝙸𝙽𝙱𝙾𝚇', description: '🗣️ꜱᴇɴᴅ ᴛᴏ ʙᴏᴛ ɪɴʙᴏx' },
+          { id: `settings_apply|${key}|same-chat`, title: '𝚂𝙰𝙼𝙴-𝙲𝙷𝙰𝚃', description: '📄 ꜱᴇɴᴅ ᴛᴏ ꜱᴀᴍᴇ ᴄʜᴀᴛ' }
+        ];
+        } else if (['MODE'].includes(key)) {
+        options = [
+          { id: `settings_apply|${key}|inbox`, title: '𝙸𝙽𝙱𝙾𝚇', description: '🗣️ ᴏɴʟʏ ɪɴʙᴏx ᴡᴏʀᴋɪɴɢ' },
+          { id: `settings_apply|${key}|private`, title: '𝙿𝚁𝙸𝚅𝙰𝚃𝙴', description: '🖥️ ᴏɴʟʏ ꜰᴏʀ ʏᴏᴜ' },
+          { id: `settings_apply|${key}|groups`, title: '𝙶𝚁𝙾𝚄𝙿𝚂', description: '👥 ᴀʟʟ ᴡᴏʀᴋɪɴɢ' }
         ];
       } else {
         await selectionStore.clearPending(senderNumber);
-        return reply(`🔧 *${key}* cannot be changed via interactive menu. Use .set ${key} <value>`);
+        return reply(`> 🔧 *${key}* 𝐂ᴀɴ'ᴛ 𝐁ᴇ 𝐂ʜᴀɴɢᴇᴅ 𝐕ɪᴀ 𝐈ɴᴛᴇʀᴀᴄᴛɪᴠᴇ 𝐌ᴇɴᴜ. 𝐔ꜱᴇ ▸ ❲ .set ${key} <value> ❳`);
       }
       const sections = [{ title: `Change ${key}`, rows: options.map(o => ({ title: o.title, rowId: o.id, description: o.description })) }];
       await conn.sendMessage(from, {
-        text: `Choose new value for *${key}*`,
-        footer: `Current: ${ (await settingsDb.get(key)) || '—' }`,
+        text: `𝐂ʜᴏᴏꜱᴇ 𝐍ᴇᴡ 𝐕ᴀʟᴜᴇ 𝐅ᴏʀ ❬❬ *${key}* ❭❭`,
+        footer: `💬 ᴄᴜʀʀᴇɴᴛ ▸ ${ (await settingsDb.get(key)) || '—' }`,
         buttonText: 'Select value',
         sections
       }, { quoted: mek });
@@ -131,16 +144,16 @@ cmd({
       const key = parts[1];
       const value = parts[2];
       // apply
-      if (!key || !value) return reply('❌ Invalid selection.');
+      if (!key || !value) return reply('> *❌ Invalid selection.*');
       // validate allowed
       if (!settingsDb.ALLOWED.includes(key)) {
-        return reply('❌ That setting cannot be changed.');
+        return reply('> *❌ That setting cannot be changed.*');
       }
       await settingsDb.set(key, value);
       const newcfg = await settingsDb.updb();
       global.config = newcfg;
       await selectionStore.clearPending(senderNumber);
-      return reply(`✅ Updated *${key}* → *${value}* (applied live).`);
+      return reply(`> _✅ 𝚄𝙿𝙳𝙰𝚃𝙴𝙳 𝚂𝙴𝚃𝚃𝙸𝙽𝙶_ ▸ *${key}* ➜ *${value}*`);
     }
 
     // If nothing matched, ignore; let other plugins handle normal commands
