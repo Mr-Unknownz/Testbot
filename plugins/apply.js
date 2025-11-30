@@ -14,21 +14,33 @@ const STRING_SETTINGS = [
 
 const pendingPath = path.join(__dirname, '../settings/apply-pending.json');
 
-function savePending(obj) {
-  fs.writeFileSync(pendingPath, JSON.stringify(obj, null, 2));
-}
-function loadPending() {
-  if (!fs.existsSync(pendingPath)) return null;
-  return JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
-}
-function clearPending() {
-  if (fs.existsSync(pendingPath)) fs.unlinkSync(pendingPath);
+// --- PENDING HANDLER ---
+function savePending(sender, value) {
+  let all = {};
+  if (fs.existsSync(pendingPath)) {
+    all = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
+  }
+  all[sender] = { value, time: Date.now() };
+  fs.writeFileSync(pendingPath, JSON.stringify(all, null, 2));
 }
 
-// ---- APPLY COMMAND ----
+function loadPending(sender) {
+  if (!fs.existsSync(pendingPath)) return null;
+  const all = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
+  return all[sender] || null;
+}
+
+function clearPending(sender) {
+  if (!fs.existsSync(pendingPath)) return;
+  const all = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
+  delete all[sender];
+  fs.writeFileSync(pendingPath, JSON.stringify(all, null, 2));
+}
+
+// --- APPLY COMMAND ---
 cmd({
   pattern: "apply",
-  desc: "Apply a text to a string setting via selection menu",
+  desc: "Apply a text to a string setting via number or list menu",
   category: "settings",
   react: "🛠️",
   filename: __filename
@@ -37,22 +49,17 @@ cmd({
   const text = args.join(' ').trim();
   if (!text) return reply("❌ Usage: .apply <text>");
 
-  const all = await settingsDb.getAll();
+  // save pending value for this user
+  savePending(m.sender, text);
 
-  // Text + numbered list
-  let list = "*🔧 APPLY STRING SETTINGS*\n\n";
+  // build text with numbered list
+  let listText = "*🔧 APPLY STRING SETTINGS*\n\n";
   STRING_SETTINGS.forEach((k, i) => {
-    list += `${i + 1}) *${k}*\n`; // current value hidden
+    listText += `${i + 1}) *${k}*\n`; // value hidden
   });
-  list += `\nReply the number to apply:\n"${text}"`;
+  listText += `\nReply the number to apply:\n"${text}"`;
 
-  savePending({
-    from: m.sender,
-    value: text,
-    time: Date.now()
-  });
-
-  // Build list menu
+  // build list menu
   const sections = [
     {
       title: "Or select setting from list",
@@ -64,7 +71,7 @@ cmd({
   ];
 
   const listMessage = {
-    text: list,
+    text: listText,
     footer: "Bot Settings",
     title: "STRING SETTINGS PANEL",
     buttonText: "Select Setting",
@@ -74,18 +81,17 @@ cmd({
   return conn.sendMessage(from, listMessage);
 });
 
-// ---- HANDLE NUMBER REPLY OR LIST CLICK ----
+// --- HANDLE NUMBER REPLY OR LIST CLICK ---
 cmd({
   on: "text"
 }, async (conn, mek, m, { reply }) => {
   try {
-    const pending = loadPending();
-    if (!pending) return;
-    if (pending.from !== m.sender) return;
+    const pending = loadPending(m.sender);
+    if (!pending) return; // no pending value
 
     let num = parseInt(m.text.trim());
 
-    // Handle rowId from list click (e.g., apply_1)
+    // handle list menu click (rowId)
     if (isNaN(num) && m.text.startsWith("apply_")) {
       num = parseInt(m.text.split("_")[1]);
     }
@@ -99,7 +105,7 @@ cmd({
     const newcfg = await settingsDb.updb();
     global.config = newcfg;
 
-    clearPending();
+    clearPending(m.sender);
     return reply(`✅ *${key}* updated to:\n"${newValue}"`);
   } catch (e) {
     console.log(e);
