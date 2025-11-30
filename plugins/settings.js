@@ -5,18 +5,19 @@ const selectionStore = require('../settings/selection-store');
 
 cmd({
   pattern: "settings",
-  alias: ["setting","config"],
+  alias: ["setting","config","showsettings"],
   desc: "Show current bot settings (interactive). Reply number or use list.",
   category: "main",
   react: "📋",
   filename: __filename
-}, async (conn, mek, m, { from, reply, sender, senderNumber }) => {
+}, async (conn, mek, m, { from, reply, sender, senderNumber, isOwner }) => {
+  if (!isOwner) return reply('> 🚫 *Queen Jusmy Settings Change Is Owner only command.I am Sorry For That...!*');
   try {
     const all = await settingsDb.getAll();
     const allowed = settingsDb.ALLOWED; // array of keys to show
 
     // Build numbered list text
-    let out = '*📡 CURRENT BOT SETTINGS*\n\n';
+    let out = '*📡 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐂ᴜʀʀᴇɴᴛ 𝐒ᴇᴛᴛɪɴɢꜱ.*\n\n';
     const items = []; // for list sections
     for (let i = 0; i < allowed.length; i++) {
       const k = allowed[i];
@@ -28,8 +29,10 @@ cmd({
         choices = 'Choices: true / false';
       } else if (['ANTI_VV','ANTI_DEL_PATH','STATUS_SAVE_PATH'].includes(k)) {
         choices = 'Choices: inbox / same-chat';
+        } else if (['MODE'].includes(k)) {
+        choices = 'Choices: inbox / public / private';
       } else {
-        choices = 'Choices: (use .set or reply to select)';
+        choices = 'Choices: ❲ᴜꜱᴇ .ꜱᴇᴛ ᴄᴏᴍᴍᴀɴᴅ ꜰᴏʀ ᴄʜᴀɴɢᴇ ꜱᴛʀɪɴɢ ꜱᴇᴛᴛɪɴɢꜱ ᴏʀ ᴄʜᴏᴏꜱᴇ ᴛʜɪꜱ ❕❳';
       }
       out += `    ${choices}\n\n`;
 
@@ -37,12 +40,12 @@ cmd({
       items.push({
         title: `${i+1}) ${k}`,
         rowId: `settings_select|${k}`, // selectedId will be parsed later
-        description: `Current: ${val} — ${choices}`
+        description: `💬 ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ ▸ ${val} — ${choices}`
       });
     }
 
-    out += '\n_Reply with the number (e.g. 3) to pick a setting, or use the list below._\n';
-    out += '_After picking, choose the new value from the presented options (true/false or inbox/same-chat)._';
+    out += '\n*ʀᴇᴘʟʏ ᴏɴʟʏ ɴᴜᴍʙᴇʀ (ᴇɢ: 3) ᴛᴏ ᴄʜᴀɴɢᴇ ᴀ ꜱᴇᴛᴛɪɴɢ, ᴏʀ ᴜꜱᴇ ʟɪꜱᴛ ʙᴇʟᴏᴡ.*\n\n';
+    out += '*ᴀꜰᴛᴇʀ ɢᴇᴛᴛɪɴɢ, ᴄʜᴏᴏꜱᴇ ᴛʜᴇ ɴᴇᴡ ᴠᴀʟᴜᴇ ꜰʀᴏᴍ ᴛʜᴇ ᴘʀᴇᴄᴇɴᴛᴇᴅ ᴏᴘᴛɪᴏɴꜱ.*';
 
     // Send numbered text first
     await conn.sendMessage(from, { text: out }, { quoted: mek });
@@ -51,15 +54,15 @@ cmd({
     // Build sections as one section with rows
     const sections = [
       {
-        title: "Editable Settings",
+        title: "👇 ꜱᴇʟᴇᴄᴛ ᴀ ꜱᴇᴛᴛɪɴɢ ᴛᴏ ᴄʜᴀɴɢᴇ. 👇",
         rows: items
       }
     ];
 
     const listMessage = {
-      text: "Select a setting to change (list).",
-      footer: "Select or reply number.",
-      buttonText: "Choose setting",
+      text: "👇 𝐒ᴇʟᴇᴄᴛ 𝐀 𝐒ᴇᴛᴛɪɴɢ 𝐓ᴏ 𝐂ʜᴀɴɢᴇ. 👇",
+      footer: "© ᴘᴏᴡᴇʀᴇᴅ ʙʏ Qᴜᴇᴇɴ ᴊᴜꜱᴍʏ 🧚",
+      buttonText: "❭❭ 𝙲𝙷𝙾𝙾𝚂𝙴 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
       sections
     };
 
