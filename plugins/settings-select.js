@@ -10,8 +10,8 @@ cmd({
   category: "internal",
   react: null,
   filename: __filename
-}, async (conn, mek, m, { from, prefix, l, quoted, body, isCmd, args, q, isGroup, sender, senderNumber, reply, isOwner }) => {
-  if (!isOwner) return reply('> *🚫 *Queen Jusmy Settings Change Is Owner only command...!*');
+}, async (conn, mek, m, { from, prefix, l, quoted, body, isCmd, args, q, isGroup, sender, senderNumber, reply }) => {
+   
   try {
     const plain = (body || '').trim();
     if (!plain) return;
