@@ -10,8 +10,7 @@ cmd({
   category: "main",
   react: "📋",
   filename: __filename
-}, async (conn, mek, m, { from, reply, sender, senderNumber, isOwner }) => {
-  if (!isOwner) return reply('> 🚫 *Queen Jusmy Settings Change Is Owner only command.I am Sorry For That...!*');
+}, async (conn, mek, m, { from, reply, sender, senderNumber }) => {
   try {
     const all = await settingsDb.getAll();
     const allowed = settingsDb.ALLOWED; // array of keys to show
