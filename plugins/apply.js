@@ -1,9 +1,9 @@
+// ./plugins/apply.js
 const { cmd } = require('../lib/command');
 const settingsDb = require('../settings/index');
 const fs = require('fs');
 const path = require('path');
 
-// String-type settings only (no booleans, no inbox/same-chat)
 const STRING_SETTINGS = [
   "PREFIX",
   "SESSION_ID",
@@ -25,24 +25,25 @@ function clearPending() {
   if (fs.existsSync(pendingPath)) fs.unlinkSync(pendingPath);
 }
 
+// ---- APPLY COMMAND ----
 cmd({
   pattern: "apply",
   desc: "Apply a text to a string setting via selection menu",
   category: "settings",
   react: "🛠️",
   filename: __filename
-}, async (conn, mek, m, { args, reply }) => {
+}, async (conn, mek, m, { args, reply, from }) => {
 
   const text = args.join(' ').trim();
   if (!text) return reply("❌ Usage: .apply <text>");
 
   const all = await settingsDb.getAll();
 
+  // Text + numbered list
   let list = "*🔧 APPLY STRING SETTINGS*\n\n";
   STRING_SETTINGS.forEach((k, i) => {
-    list += `${i + 1}) *${k}* : ${all[k]}\n`;
+    list += `${i + 1}) *${k}*\n`; // current value hidden
   });
-
   list += `\nReply the number to apply:\n"${text}"`;
 
   savePending({
@@ -51,10 +52,29 @@ cmd({
     time: Date.now()
   });
 
-  return reply(list);
+  // Build list menu
+  const sections = [
+    {
+      title: "Or select setting from list",
+      rows: STRING_SETTINGS.map((key, i) => ({
+        title: key,
+        rowId: `apply_${i + 1}`
+      }))
+    }
+  ];
+
+  const listMessage = {
+    text: list,
+    footer: "Bot Settings",
+    title: "STRING SETTINGS PANEL",
+    buttonText: "Select Setting",
+    sections
+  };
+
+  return conn.sendMessage(from, listMessage);
 });
 
-// Handle reply to apply
+// ---- HANDLE NUMBER REPLY OR LIST CLICK ----
 cmd({
   on: "text"
 }, async (conn, mek, m, { reply }) => {
@@ -63,7 +83,13 @@ cmd({
     if (!pending) return;
     if (pending.from !== m.sender) return;
 
-    const num = parseInt(m.text.trim());
+    let num = parseInt(m.text.trim());
+
+    // Handle rowId from list click (e.g., apply_1)
+    if (isNaN(num) && m.text.startsWith("apply_")) {
+      num = parseInt(m.text.split("_")[1]);
+    }
+
     if (isNaN(num) || num < 1 || num > STRING_SETTINGS.length) return;
 
     const key = STRING_SETTINGS[num - 1];
