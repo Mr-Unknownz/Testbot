@@ -36,7 +36,6 @@ const qrcode = require('qrcode-terminal')
 const NodeCache = require('node-cache')
 const util = require('util')
 const { sms, downloadMediaMessage } = require('./lib/msg')
-const { initAntiDelete } = require('./plugins/antidelete');
 const axios = require('axios')
 const { File } = require('megajs')
 const { exec } = require('child_process');
@@ -144,7 +143,7 @@ conn.groupAcceptInvite(inviteCode); 
                     require("./plugins/" + plugin);
                 }
             });
-            initAntiDelete(conn);
+            
             console.log('QUEEN-JUSMY-MD Plugins Installed 📂')
             console.log(' Bot connected ✅')
   
