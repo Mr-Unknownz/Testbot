@@ -1,94 +1,138 @@
 // ./plugins/apply.js
 const { cmd } = require('../lib/command');
 const settingsDb = require('../settings/index');
-const fs = require('fs');
-const path = require('path');
+const store = require('../settings/apply-store');
 
-const STRING_SETTINGS = ["PREFIX","SESSION_ID","ALIVE_MSG","ALIVE_IMG","FOOTER"];
-const pendingPath = path.join(__dirname, '../settings/apply-pending.json');
-
-// --- PENDING HANDLER ---
-function savePending(sender, value) {
-  let all = {};
-  if (fs.existsSync(pendingPath)) all = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
-  all[sender] = { value, time: Date.now() };
-  fs.writeFileSync(pendingPath, JSON.stringify(all, null, 2));
-}
-
-function loadPending(sender) {
-  if (!fs.existsSync(pendingPath)) return null;
-  const all = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
-  return all[sender] || null;
-}
-
-function clearPending(sender) {
-  if (!fs.existsSync(pendingPath)) return;
-  const all = JSON.parse(fs.readFileSync(pendingPath, 'utf8'));
-  delete all[sender];
-  fs.writeFileSync(pendingPath, JSON.stringify(all, null, 2));
-}
-
-// --- APPLY COMMAND ---
 cmd({
   pattern: "apply",
-  desc: "Apply a text to a string setting via number or list menu",
+  desc: "Apply string settings using menu or number reply",
   category: "settings",
-  react: "🛠️",
+  react: "📑",
   filename: __filename
-}, async (conn, mek, m, { args, reply, from }) => {
+}, async (conn, mek, m, { from, args, reply }) => {
 
-  const text = args.join(' ').trim();
-  if (!text) return reply("❌ Usage: .apply <text>");
+  try {
+    const botJid = conn.user.id.split(':')[0];
+    const sender = m.sender.split('@')[0];
 
-  savePending(m.sender, text);
+    // allow ONLY bot creator to control
+    if (sender !== botJid) return;   // ignore others
 
-  // Build numbered list
-  let listText = "*🔧 STRING SETTINGS PANEL*\n\n";
-  STRING_SETTINGS.forEach((k, i) => listText += `${i+1}) *${k}*\n`);
-  listText += `\nReply the number to apply:\n"${text}"`;
+    if (!args[0])
+      return reply("⚠️ Usage: .apply <your_value>");
 
-  // Build list menu
-  const sections = [{ 
-    title: "Select setting", 
-    rows: STRING_SETTINGS.map((k, i) => ({ title: k, rowId: `apply_${i+1}` })) 
-  }];
+    const newValue = args.join(' ');
 
-  const listMessage = {
-    text: listText,
-    footer: "Bot Settings",
-    title: "STRING SETTINGS PANEL",
-    buttonText: "Select Setting",
-    sections
-  };
+    const STR_SETTINGS = [
+      "PREFIX",
+      "SESSION_ID",
+      "ALIVE_MSG",
+      "ALIVE_IMG",
+      "FOOTER"
+    ];
 
-  return conn.sendMessage(from, listMessage);
+    // make selection text
+    let txt = `*📑 APPLY STRING SETTINGS*\n`;
+    txt += `Your input: *${newValue}*\n\n`;
+    txt += `Reply the number OR choose from list 👇\n\n`;
+
+    STR_SETTINGS.forEach((k, i) => {
+      txt += `*${i + 1}) ${k}*\n`;
+    });
+
+    // interactive list (buttons-like) 
+    const sections = [{
+      title: "String Settings",
+      rows: STR_SETTINGS.map((k, idx) => ({
+        title: `${idx + 1}. ${k}`,
+        rowId: `.apply_do ${k} ${newValue}`
+      }))
+    }];
+
+    // send menu + set store
+    const sent = await conn.sendMessage(from, {
+      text: txt,
+      footer: "Select or reply number",
+      title: "String Settings Panel",
+      buttonText: "SELECT SETTING",
+      sections
+    }, { quoted: mek });
+
+    // save to store
+    await store.setPending(from, {
+      msgId: sent.key.id,
+      value: newValue
+    });
+
+  } catch (e) {
+    console.log("APPLY ERROR", e);
+  }
 });
 
-// --- HANDLE NUMBER REPLY OR LIST CLICK ---
+// number replies handler
 cmd({
   on: "text"
-}, async (conn, mek, m, { reply }) => {
+}, async (conn, mek, m) => {
   try {
-    const pending = loadPending(m.sender);
+    const botJid = conn.user.id.split(':')[0];
+    const sender = m.sender.split('@')[0];
+    if (sender !== botJid) return;
+
+    const pending = await store.getPending(m.chat);
     if (!pending) return;
 
-    let num = parseInt(m.text.trim());
+    // check reply to correct message
+    if (m.quoted && m.quoted.id !== pending.msgId) return;
 
-    // handle list menu click
-    if (isNaN(num) && m.text.startsWith("apply_")) num = parseInt(m.text.split("_")[1]);
-    if (isNaN(num) || num < 1 || num > STRING_SETTINGS.length) return;
+    const choice = m.text.trim();
+    const index = parseInt(choice);
+    if (isNaN(index)) return;
 
-    const key = STRING_SETTINGS[num-1];
-    const newValue = pending.value;
+    const STR_SETTINGS = [
+      "PREFIX",
+      "SESSION_ID",
+      "ALIVE_MSG",
+      "ALIVE_IMG",
+      "FOOTER"
+    ];
+
+    const target = STR_SETTINGS[index - 1];
+    if (!target) return conn.sendMessage(m.chat, { text: "❌ Invalid number." });
+
+    // apply update
+    await settingsDb.set(target, pending.value);
+    global.config = await settingsDb.updb();
+
+    await conn.sendMessage(m.chat, { text: `✅ Updated *${target}* → *${pending.value}*` });
+
+    await store.clearPending(m.chat);
+
+  } catch (e) {
+    console.log("APPLY-REPLY ERR", e);
+  }
+});
+
+// list click handler (.apply_do)
+cmd({
+  pattern: "apply_do"
+}, async (conn, mek, m, { args, from }) => {
+
+  try {
+    const botJid = conn.user.id.split(':')[0];
+    const sender = m.sender.split('@')[0];
+    if (sender !== botJid) return;
+
+    const key = args[0];
+    const newValue = args.slice(1).join(' ');
 
     await settingsDb.set(key, newValue);
-    const newcfg = await settingsDb.updb();
-    global.config = newcfg;
+    global.config = await settingsDb.updb();
 
-    clearPending(m.sender);
-    return reply(`✅ *${key}* updated to:\n"${newValue}"`);
+    await conn.sendMessage(from, { text: `✅ Updated *${key}* → *${newValue}*` });
+
+    await store.clearPending(from);
+
   } catch (e) {
-    console.log(e);
-    return reply("❌ Failed to apply setting");
+    console.log("apply_do ERROR", e);
   }
 });
