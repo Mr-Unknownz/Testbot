@@ -4,7 +4,7 @@ const path = require('path');
 const axios = require('axios');
 
 const GITHUB_USER = config.GITHUB_USER || 'ranawakagevijitha';
-const GITHUB_REPO = conf8g.GITHUB_REPO || 'Testbot';
+const GITHUB_REPO = config.GITHUB_REPO || 'Testbot';
 const GITHUB_TOKEN = config.GITHUB_TOKEN || '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';
 const REMOTE_PATH = 'settings/settings.json';
 const LOCAL_PATH = path.join(__dirname, 'local-settings.json');
