@@ -36,8 +36,8 @@ cmd({
 
     // make selection text
     let txt = `*🔒「 𝙰𝙿𝙿𝙻𝚈 𝙿𝙰𝙽𝙴𝙻 」*\n\n`;
-    txt += `↩ Yᴏᴜʀ Eɴᴛᴇʀᴇᴅ Tᴇxᴛ *${newValue}*\n\n`;
-    txt += `Rᴇᴘʟʏ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴏʀ ᴄʜᴏᴏꜱᴇ ꜰʀᴏᴍ ʟɪꜱᴛ 👇\n\n`;
+    txt += `↩ Yᴏᴜʀ Eɴᴛᴇʀᴇᴅ Tᴇxᴛ : *${newValue}*\n\n`;
+    txt += `💬 Rᴇᴘʟʏ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴏʀ ᴄʜᴏᴏꜱᴇ ꜰʀᴏᴍ ʟɪꜱᴛ 👇\n\n`;
 
     STR_SETTINGS.forEach((k, i) => {
       txt += `*🔹 ${i + 1}❭❭▸ ${k}*\n`;
@@ -45,9 +45,9 @@ cmd({
 
     // interactive list (buttons-like) 
     const sections = [{
-      title: "*🔒「 𝙰𝙿𝙿𝙻𝚈 𝙿𝙰𝙽𝙴𝙻 」*",
+      title: "🔒「 𝙰𝙿𝙿𝙻𝚈 𝙿𝙰𝙽𝙴𝙻 」",
       rows: STR_SETTINGS.map((k, idx) => ({
-        title: `${idx + 1}. ${k}`,
+        title: `🔹 ${idx + 1}❭❭▸ ${k}`,
         rowId: `.apply_do ${k} ${newValue}`
       }))
     }];
@@ -55,8 +55,8 @@ cmd({
     // send menu + set store
     const sent = await conn.sendMessage(from, {
       text: txt,
-      footer: "Select or reply number",
-      title: "String Settings Panel",
+      footer: "© Pᴏᴡᴇʀᴇᴅ ʙʏ Qᴜᴇᴇɴ ᴊᴜꜱᴍʏ ᴍᴅ 🧚",
+      title: "*< | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 𝐒ᴇᴛᴛɪɴɢ 𝐂ʜᴀɴɢᴇ ⚙️*",
       buttonText: "❭❭ 𝚂𝙴𝙻𝙴𝙲𝚃 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
       sections
     }, { quoted: mek });
