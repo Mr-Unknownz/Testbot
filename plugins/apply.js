@@ -109,7 +109,7 @@ cmd({
     await settingsDb.set(target, pending.value);
     global.config = await settingsDb.updb();
 
-    await conn.sendMessage(m.chat, { text: `✅ Updated *${target}* → *${pending.value}*` });
+    await conn.sendMessage(m.chat, { text: `> _✅ 𝚄𝙿𝙳𝙰𝚃𝙴𝙳 ❲ *${key}* ❳ ➜ ❲ *${newValue}* ❳_` });
 
     await store.clearPending(m.chat);
 
@@ -134,7 +134,7 @@ cmd({
     await settingsDb.set(key, newValue);
     global.config = await settingsDb.updb();
 
-    await conn.sendMessage(from, { text: `> _✅ 𝚄𝙿𝙳𝙰𝚃𝙴𝙳 ❲*${key}*❳ ➜ ❲*${newValue}*❳_` });
+    await conn.sendMessage(from, { text: `> _✅ 𝚄𝙿𝙳𝙰𝚃𝙴𝙳 ❲ *${key}* ❳ ➜ ❲ *${newValue}* ❳_` });
 
     await store.clearPending(from);
 
