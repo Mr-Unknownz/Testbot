@@ -19,7 +19,7 @@ cmd({
     if (sender !== botJid) return;   // ignore others
 
     if (!args[0])
-      return reply("⚠️ Usage: .apply <your_value>");
+      return reply("> *⚠️ Usage: .apply <your txt or link>*");
 
     const newValue = args.join(' ');
 
@@ -28,21 +28,24 @@ cmd({
       "SESSION_ID",
       "ALIVE_MSG",
       "ALIVE_IMG",
-      "FOOTER"
+      "FOOTER",
+      "GITHUB_USER",
+      "GITHUB_REPO",
+      "GITHUB_TOKEN"
     ];
 
     // make selection text
-    let txt = `*📑 APPLY STRING SETTINGS*\n`;
-    txt += `Your input: *${newValue}*\n\n`;
-    txt += `Reply the number OR choose from list 👇\n\n`;
+    let txt = `*🔒「 𝙰𝙿𝙿𝙻𝚈 𝙿𝙰𝙽𝙴𝙻 」*\n\n`;
+    txt += `↩ Yᴏᴜʀ Eɴᴛᴇʀᴇᴅ Tᴇxᴛ *${newValue}*\n\n`;
+    txt += `Rᴇᴘʟʏ ᴛʜᴇ ɴᴜᴍʙᴇʀ ᴏʀ ᴄʜᴏᴏꜱᴇ ꜰʀᴏᴍ ʟɪꜱᴛ 👇\n\n`;
 
     STR_SETTINGS.forEach((k, i) => {
-      txt += `*${i + 1}) ${k}*\n`;
+      txt += `*🔹 ${i + 1}❭❭▸ ${k}*\n`;
     });
 
     // interactive list (buttons-like) 
     const sections = [{
-      title: "String Settings",
+      title: "*🔒「 𝙰𝙿𝙿𝙻𝚈 𝙿𝙰𝙽𝙴𝙻 」*",
       rows: STR_SETTINGS.map((k, idx) => ({
         title: `${idx + 1}. ${k}`,
         rowId: `.apply_do ${k} ${newValue}`
@@ -54,7 +57,7 @@ cmd({
       text: txt,
       footer: "Select or reply number",
       title: "String Settings Panel",
-      buttonText: "SELECT SETTING",
+      buttonText: "❭❭ 𝚂𝙴𝙻𝙴𝙲𝚃 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
       sections
     }, { quoted: mek });
 
@@ -93,11 +96,14 @@ cmd({
       "SESSION_ID",
       "ALIVE_MSG",
       "ALIVE_IMG",
-      "FOOTER"
+      "FOOTER",
+      "GITHUB_USER",
+      "GITHUB_REPO",
+      "GITHUB_TOKEN"
     ];
 
     const target = STR_SETTINGS[index - 1];
-    if (!target) return conn.sendMessage(m.chat, { text: "❌ Invalid number." });
+    if (!target) return conn.sendMessage(m.chat, { text: "> *❌ Invalid Number.Please Type 1 - 8 Number*" });
 
     // apply update
     await settingsDb.set(target, pending.value);
@@ -128,7 +134,7 @@ cmd({
     await settingsDb.set(key, newValue);
     global.config = await settingsDb.updb();
 
-    await conn.sendMessage(from, { text: `✅ Updated *${key}* → *${newValue}*` });
+    await conn.sendMessage(from, { text: `> _✅ 𝚄𝙿𝙳𝙰𝚃𝙴𝙳 ❲*${key}*❳ ➜ ❲*${newValue}*❳_` });
 
     await store.clearPending(from);
 
