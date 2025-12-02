@@ -2,6 +2,7 @@
 const { cmd } = require('../lib/command');
 const settingsDb = require('../settings/index');
 const selectionStore = require('../settings/selection-store');
+const config = require('../settings/settings.json');
 
 cmd({
   pattern: "settings",
@@ -16,12 +17,12 @@ cmd({
     const allowed = settingsDb.ALLOWED; // array of keys to show
 
     // Build numbered list text
-    let out = '*📡 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐂ᴜʀʀᴇɴᴛ 𝐒ᴇᴛᴛɪɴɢꜱ.*\n\n';
+    let out = '*< | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐂ᴜʀʀᴇɴᴛ 𝐒ᴇᴛᴛɪɴɢꜱ. ⚙️*\n\n';
     const items = []; // for list sections
     for (let i = 0; i < allowed.length; i++) {
       const k = allowed[i];
       const val = all[k] === undefined ? '—' : all[k];
-      out += `*${i+1}) ${k}* : ${val}\n`;
+      out += `🔹 *${i+1}❭❭▸ ${k}* ➜ ${val}\n`;
       // Add possible choices info for the main toggles (we'll show boolean and inbox/same-chat choices later)
       let choices = '';
       if (['AUTO_BIO','AUTO_REPLY','AUTO_VOICE','AUTO_TYPING','AUTO_STICKER','AUTO_RECORDING','ALWAYS_ONLINE','OWNER_REACT','AUTO_READ_STATUS','BUTTON','MENTION_REPLY','ANTI_DELETE'].includes(k)) {
@@ -37,13 +38,13 @@ cmd({
 
       // prepare list item
       items.push({
-        title: `${i+1}) ${k}`,
+        title: `🔹 ${i+1}❭❭▸ ${k}`,
         rowId: `settings_select|${k}`, // selectedId will be parsed later
-        description: `💬 ᴄᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ ▸ ${val} — ${choices}`
+        description: `💬 Cᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ ▸ ${val} — ${choices}`
       });
     }
 
-    out += '\n*ʀᴇᴘʟʏ ᴏɴʟʏ ɴᴜᴍʙᴇʀ (ᴇɢ: 3) ᴛᴏ ᴄʜᴀɴɢᴇ ᴀ ꜱᴇᴛᴛɪɴɢ, ᴏʀ ᴜꜱᴇ ʟɪꜱᴛ ʙᴇʟᴏᴡ.*\n\n';
+    out += '\n*ʀᴇᴘʟʏ ᴏɴʟʏ ɴᴜᴍʙᴇʀ (ᴇɢ: 3) ᴛᴏ ᴄʜᴀɴɢᴇ ꜱᴇᴛᴛɪɴɢ, ᴏʀ ᴜꜱᴇ ʟɪꜱᴛ ʙᴇʟᴏᴡ.*\n\n';
     out += '*ᴀꜰᴛᴇʀ ɢᴇᴛᴛɪɴɢ, ᴄʜᴏᴏꜱᴇ ᴛʜᴇ ɴᴇᴡ ᴠᴀʟᴜᴇ ꜰʀᴏᴍ ᴛʜᴇ ᴘʀᴇᴄᴇɴᴛᴇᴅ ᴏᴘᴛɪᴏɴꜱ.*';
 
     // Send numbered text first
@@ -60,7 +61,7 @@ cmd({
 
     const listMessage = {
       text: "👇 𝐒ᴇʟᴇᴄᴛ 𝐀 𝐒ᴇᴛᴛɪɴɢ 𝐓ᴏ 𝐂ʜᴀɴɢᴇ.",
-      footer: "© ᴘᴏᴡᴇʀᴇᴅ ʙʏ Qᴜᴇᴇɴ ᴊᴜꜱᴍʏ 🧚",
+      footer: config.FOOTER,
       buttonText: "❭❭ 𝙲𝙷𝙾𝙾𝚂𝙴 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
       sections
     };
