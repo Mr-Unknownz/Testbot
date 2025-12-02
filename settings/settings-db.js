@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
+const config = require('../settings.json');
 
 const GITHUB_USER = config.GITHUB_USER || 'ranawakagevijitha';
 const GITHUB_REPO = config.GITHUB_REPO || 'Testbot';
