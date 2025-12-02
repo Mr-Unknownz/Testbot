@@ -9,6 +9,9 @@ let current = { ...defaultConfig };
 const ALLOWED = [
   'PREFIX',
   'SESSION_ID',
+  'GITHUB_REPO',
+  'GITHUB_USER',
+  'GITHUB_TOKEN',
   'ALIVE_MSG',
   'ALIVE_IMG',
   'FOOTER',
