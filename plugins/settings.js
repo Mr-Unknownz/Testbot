@@ -21,18 +21,18 @@ cmd({
     const items = []; // for list sections
     for (let i = 0; i < allowed.length; i++) {
       const k = allowed[i];
-      const val = all[k] === undefined ? '—' : all[k];
+      const val = all[k] === undefined ? '🚫' : all[k];
       out += `🔹 *${i+1}❭❭▸ ${k}* ➜ ${val}\n`;
       // Add possible choices info for the main toggles (we'll show boolean and inbox/same-chat choices later)
       let choices = '';
       if (['AUTO_BIO','AUTO_REPLY','AUTO_VOICE','AUTO_TYPING','AUTO_STICKER','AUTO_RECORDING','ALWAYS_ONLINE','OWNER_REACT','AUTO_READ_STATUS','BUTTON','MENTION_REPLY','ANTI_DELETE'].includes(k)) {
-        choices = 'Choices: true / false';
+        choices = '🔻 Cʜᴏɪᴄᴇꜱ : 𝚃𝚁𝚄𝙴 & 𝙵𝙰𝙻𝚂𝙴';
       } else if (['ANTI_VV','ANTI_DEL_PATH','STATUS_SAVE_PATH'].includes(k)) {
-        choices = 'Choices: inbox / same-chat';
+        choices = '🔻 Cʜᴏɪᴄᴇꜱ : 𝙸𝙽𝙱𝙾𝚇 & 𝚂𝙰𝙼𝙴-𝙲𝙷𝙰𝚃';
         } else if (['MODE'].includes(k)) {
-        choices = 'Choices: inbox / groups / private';
+        choices = '🔻 Cʜᴏɪᴄᴇꜱ : 𝙸𝙽𝙱𝙾𝚇 & 𝙶𝚁𝙾𝚄𝙿𝚂 & 𝙿𝚁𝙸𝚅𝙰𝚃𝙴';
       } else {
-        choices = 'Choices: ❲use set cmd❳';
+        choices = '🔻 Cʜᴏɪᴄᴇꜱ : ❲ 𝚃𝚈𝙿𝙴 .apply 𝚃𝙾 𝙲𝙷𝙰𝙽𝙶𝙴 𝚂𝚃𝚁𝙸𝙽𝙶𝚂 ❳';
       }
       out += `    ${choices}\n\n`;
 
@@ -61,7 +61,7 @@ cmd({
 
     const listMessage = {
       text: "👇 𝐒ᴇʟᴇᴄᴛ 𝐀 𝐒ᴇᴛᴛɪɴɢ 𝐓ᴏ 𝐂ʜᴀɴɢᴇ.",
-      footer: "< | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️",
+      footer: config.FOOTER,
       buttonText: "❭❭ 𝙲𝙷𝙾𝙾𝚂𝙴 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
       sections
     };
