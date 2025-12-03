@@ -40,7 +40,7 @@ cmd({
       items.push({
         title: `🔹 ${i+1}❭❭▸ ${k}`,
         rowId: `settings_select|${k}`, // selectedId will be parsed later
-        description: `💬 Cᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ ▸ ${val} — ${choices}`
+        description: `${choices}`
       });
     }
 
