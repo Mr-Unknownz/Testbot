@@ -87,7 +87,6 @@ cmd({
     ];
 
     const listMessage = {
-      image: imageBuffer,
       caption: "👇 𝐒ᴇʟᴇᴄᴛ 𝐀 𝐒ᴇᴛᴛɪɴɢ 𝐓ᴏ 𝐂ʜᴀɴɢᴇ.",
       footer: config.FOOTER,
       buttonText: "❭❭ 𝙲𝙷𝙾𝙾𝚂𝙴 𝚂𝙴𝚃𝚃𝙸𝙽𝙶 ✗",
