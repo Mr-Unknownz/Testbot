@@ -22,7 +22,7 @@ cmd({
     for (let i = 0; i < allowed.length; i++) {
       const k = allowed[i];
       const val = all[k] === undefined ? '🚫' : all[k];
-      out += `🔹 *${i+1}❭❭▸ ${k}*\n❔ Nᴏᴡ ▸ ${val}\n`;
+      out += `🔹 *${i+1}❭❭▸ ${k}*\n💬 Cᴜʀʀᴇɴᴛ ɪꜱ ▸ ${val}\n`;
       // Add possible choices info for the main toggles (we'll show boolean and inbox/same-chat choices later)
       let choices = '';
       if (['AUTO_BIO','AUTO_REPLY','AUTO_VOICE','AUTO_TYPING','AUTO_STICKER','AUTO_RECORDING','ALWAYS_ONLINE','OWNER_REACT','AUTO_READ_STATUS','BUTTON','MENTION_REPLY','ANTI_DELETE'].includes(k)) {
@@ -34,13 +34,13 @@ cmd({
       } else {
         choices = '🔸 Cʜᴏɪᴄᴇꜱ ▸ ❲ 𝚃𝚈𝙿𝙴 .apply 𝚃𝙾 𝙲𝙷𝙰𝙽𝙶𝙴 𝚂𝚃𝚁𝙸𝙽𝙶𝚂 ❳';
       }
-      out += `    ${choices}\n\n`;
+      out += `${choices}\n\n`;
 
       // prepare list item
       items.push({
         title: `🔹 ${i+1}❭❭▸ ${k}`,
         rowId: `settings_select|${k}`, // selectedId will be parsed later
-        description: `💬 Cᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ ▸ ${val} — ${choices}`
+        description: `${choices}`
       });
     }
 
