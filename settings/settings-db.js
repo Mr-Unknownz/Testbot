@@ -2,11 +2,10 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const config = require('../settings/settings.json');
 
-const GITHUB_USER = config.GITHUB_USER || 'ranawakagevijitha';
-const GITHUB_REPO = config.GITHUB_REPO || 'Testbot';
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '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';
+const GITHUB_USER = process.env.GITHUB_USER || 'ranawakagevijitha';
+const GITHUB_REPO = process.env.GITHUB_REPO || 'Testbot';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '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';
 const REMOTE_PATH = 'settings/settings.json';
 const LOCAL_PATH = path.join(__dirname, 'local-settings.json');
 
@@ -39,7 +38,7 @@ async function githubCreateOrUpdateFile(contentObj) {
     // get existing to fetch sha
     const getRes = await axios.get(url, { headers: githubHeaders() }).catch(() => null);
     const body = {
-      message: `Update settings.json by bot`,
+      message: `UPDATE SETTINGS BY USER - DATABASE EDIT`,
       content: Buffer.from(JSON.stringify(contentObj, null, 2)).toString('base64'),
     };
     if (getRes && getRes.data && getRes.data.sha) body.sha = getRes.data.sha;
