@@ -10,7 +10,7 @@ MONGODB: process.env.MONGODB || "mongodb://mongo:hSKOyytRSHAikyAFUajcmkoJTEcgoBT
 PREFIX: process.env.PREFIX || '.',
 GITHUB_REPO: process.env.GITHUB_REPO || 'Testbot',
 GITHUB_USER: process.env.GUTHUB_USER || 'ranawakagevijitha',
-GITHUB_TOKEN: process.env.GITHUB_USER || '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',
+GITHUB_TOKEN: process.env.GITHUB_USER || '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',
 ALIVE_IMG: process.env.ALIVE_IMG || 'https://files.catbox.moe/xo1wiq.png',   
 FOOTER: process.env.FOOTER || '> *©卩ᴏᴡᴇʀᴇᴅ ʙʏ < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️*',
 ALIVE_MSG: process.env.ALIVE_MSG || '👾 Ｗ𝙴𝙻𝙲𝙾𝙼𝙴 𝚃𝙾 < | 𝐐ᴜᴇᴇɴ 𝐉ᴜꜱᴍʏ 𝐌ᴅ 🧚‍♀️',
