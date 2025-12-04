@@ -6,7 +6,7 @@ const config = require('../settings/settings.json');
 
 const GITHUB_USER = config.GITHUB_USER || 'ranawakagevijitha';
 const GITHUB_REPO = config.GITHUB_REPO || 'Testbot';
-const GITHUB_TOKEN = config.GITHUB_TOKEN || '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';
+const GITHUB_TOKEN = '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';
 const REMOTE_PATH = 'settings/settings.json';
 const LOCAL_PATH = path.join(__dirname, 'local-settings.json');
 
