@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 
-const GITHUB_USER = process.env.GITHUB_USER || 'ranawakagevijitha';
+const GITHUB_USER = process.env.GITHUB_USER || 'Mr-Unknownz';
 const GITHUB_REPO = process.env.GITHUB_REPO || 'Testbot';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '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';
 const REMOTE_PATH = 'settings/settings.json';
