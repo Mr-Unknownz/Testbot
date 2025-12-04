@@ -22,17 +22,17 @@ cmd({
     for (let i = 0; i < allowed.length; i++) {
       const k = allowed[i];
       const val = all[k] === undefined ? '🚫' : all[k];
-      out += `🔹 *${i+1}❭❭▸ ${k}* ➜ ${val}\n`;
+      out += `🔹 *${i+1}❭❭▸ ${k}*\n❔ Nᴏᴡ ▸ ${val}\n`;
       // Add possible choices info for the main toggles (we'll show boolean and inbox/same-chat choices later)
       let choices = '';
       if (['AUTO_BIO','AUTO_REPLY','AUTO_VOICE','AUTO_TYPING','AUTO_STICKER','AUTO_RECORDING','ALWAYS_ONLINE','OWNER_REACT','AUTO_READ_STATUS','BUTTON','MENTION_REPLY','ANTI_DELETE'].includes(k)) {
-        choices = '🔻 Cʜᴏɪᴄᴇꜱ : 𝚃𝚁𝚄𝙴 & 𝙵𝙰𝙻𝚂𝙴';
+        choices = '🔸 Cʜᴏɪᴄᴇꜱ ▸ 𝚃𝚁𝚄𝙴 & 𝙵𝙰𝙻𝚂𝙴';
       } else if (['ANTI_VV','ANTI_DEL_PATH','STATUS_SAVE_PATH'].includes(k)) {
-        choices = '🔻 Cʜᴏɪᴄᴇꜱ : 𝙸𝙽𝙱𝙾𝚇 & 𝚂𝙰𝙼𝙴-𝙲𝙷𝙰𝚃';
+        choices = '🔸 Cʜᴏɪᴄᴇꜱ ▸ 𝙸𝙽𝙱𝙾𝚇 & 𝚂𝙰𝙼𝙴-𝙲𝙷𝙰𝚃';
         } else if (['MODE'].includes(k)) {
-        choices = '🔻 Cʜᴏɪᴄᴇꜱ : 𝙸𝙽𝙱𝙾𝚇 & 𝙶𝚁𝙾𝚄𝙿𝚂 & 𝙿𝚁𝙸𝚅𝙰𝚃𝙴';
+        choices = '🔸 Cʜᴏɪᴄᴇꜱ ▸ 𝙸𝙽𝙱𝙾𝚇 & 𝙶𝚁𝙾𝚄𝙿𝚂 & 𝙿𝚁𝙸𝚅𝙰𝚃𝙴';
       } else {
-        choices = '🔻 Cʜᴏɪᴄᴇꜱ : ❲ 𝚃𝚈𝙿𝙴 .apply 𝚃𝙾 𝙲𝙷𝙰𝙽𝙶𝙴 𝚂𝚃𝚁𝙸𝙽𝙶𝚂 ❳';
+        choices = '🔸 Cʜᴏɪᴄᴇꜱ ▸ ❲ 𝚃𝚈𝙿𝙴 .apply 𝚃𝙾 𝙲𝙷𝙰𝙽𝙶𝙴 𝚂𝚃𝚁𝙸𝙽𝙶𝚂 ❳';
       }
       out += `    ${choices}\n\n`;
 
@@ -40,7 +40,7 @@ cmd({
       items.push({
         title: `🔹 ${i+1}❭❭▸ ${k}`,
         rowId: `settings_select|${k}`, // selectedId will be parsed later
-        description: `${choices}`
+        description: `💬 Cᴜʀʀᴇɴᴛ ᴠᴀʟᴜᴇ ▸ ${val} — ${choices}`
       });
     }
 
